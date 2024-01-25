@@ -55,11 +55,11 @@ float aspectRatio = 1.f;
 float exposition = 1.f;
 
 glm::vec3 lightPos = glm::vec3(-8, 4, 2);
-glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*100;
+glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*100.0f;
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
-glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*10;
+glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*10.0f;
 float spotlightPhi = 3.14 / 3;
 
 
@@ -175,7 +175,7 @@ void renderScene(GLFWwindow* window)
 		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
 	);
 
-	spotlightPos = spaceshipPos + 0.5 * spaceshipDir;
+	spotlightPos = spaceshipPos + 0.5f * spaceshipDir;
 	spotlightConeDir = spaceshipDir;
 
 	glUseProgram(0);
@@ -251,7 +251,7 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		spaceshipDir = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(spaceshipDir, 0));
 
-	cameraPos = spaceshipPos - 1.5 * spaceshipDir + glm::vec3(0, 1, 0) * 0.5f;
+	cameraPos = spaceshipPos - 1.5f * spaceshipDir + glm::vec3(0, 1, 0) * 0.5f;
 	cameraDir = spaceshipDir;
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		exposition -= 0.05;
