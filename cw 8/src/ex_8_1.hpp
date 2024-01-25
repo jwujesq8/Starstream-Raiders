@@ -1,4 +1,4 @@
-﻿#include "glew.h"
+﻿#include "GL/glew.h"
 #include <GLFW/glfw3.h>
 #include "glm.hpp"
 #include "ext.hpp"
@@ -14,6 +14,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <string>
+#include <gtx/euler_angles.hpp>
 
 
 namespace texture {
@@ -73,7 +74,7 @@ glm::mat4 createCameraMatrix()
 		0.,0.,0.,1.,
 		});
 	cameraRotrationMatrix = glm::transpose(cameraRotrationMatrix);
-	glm::mat4 cameraMatrix = cameraRotrationMatrix * glm::translate(-cameraPos);
+	glm::mat4 cameraMatrix = cameraRotrationMatrix * glm::translate(glm::mat4(1.0), -cameraPos);
 
 	return cameraMatrix;
 }
@@ -170,7 +171,7 @@ void renderScene(GLFWwindow* window)
 	//	glm::vec3(0.3, 0.3, 0.5)
 	//	);
 	drawObjectColor(shipContext,
-		glm::translate(spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::vec3(0.1)),
+		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.1)),
 		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
 	);
 
