@@ -96,8 +96,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mtd.lib;freeglut.lib;glew32.lib;zlibd.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/x64;$(SolutionDir)/External resourses/ASSIMP/;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mtd.lib;freeglut.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/Win32;$(SolutionDir)/External resourses/ASSIMP;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
