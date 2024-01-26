@@ -89,9 +89,6 @@
     <ClInclude Include="src\ex_8_1.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ex_8_2.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_8_sun.vert">

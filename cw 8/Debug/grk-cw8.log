@@ -1,20 +1,121 @@
 ﻿D:\Programs\Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj, grk-cw8.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Box.cpp
-  Camera.cpp
   main.cpp
-  Render_Utils.cpp
-D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(1,10): error C1083: Cannot open include file: 'glew.h': No such file or directory
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file 'src/main.cpp')
+  D:\hoojnia\gk\External resourses\GLFW\include\GLFW\glfw3.h(123,1):
+  see previous definition of 'APIENTRY'
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(63,20): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\hoojnia\gk\cw 8\src\Render_Utils.h(3,10): error C1083: Cannot open include file: 'glew.h': No such file or directory
-  (compiling source file 'src/Render_Utils.cpp')
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(86,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
   
-  Shader_Loader.cpp
-D:\hoojnia\gk\cw 8\src\Shader_Loader.h(3,10): error C1083: Cannot open include file: 'glew.h': No such file or directory
-  (compiling source file 'src/Shader_Loader.cpp')
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(141,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
   
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(151,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(152,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         with
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         [
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:             T=float
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         ]
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(175,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(175,29): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(140,12): warning C4101: 'transformation': unreferenced local variable
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(257,21): warning C4305: '-=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(259,21): warning C4305: '+=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+  Render_Utils.cpp
   Texture.cpp
-D:\hoojnia\gk\cw 8\src\Texture.h(3,10): error C1083: Cannot open include file: 'glew.h': No such file or directory
-  (compiling source file 'src/Texture.cpp')
+  Generating Code...
+  image_DXT.c
+D:\hoojnia\gk\cw 8\src\SOIL\image_DXT.c(92,9): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  image_helper.c
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(325,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(366,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(373,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(415,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(422,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  SOIL.c
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1719,36): warning C4018: '<=': signed/unsigned mismatch
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1729,19): warning C4018: '<': signed/unsigned mismatch
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1841,6): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  stb_image_aug.c
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(362,19): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(366,19): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(390,19): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(427,19): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
   
   Generating Code...
+Box.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+main.obj : error LNK2019: unresolved external symbol __imp__glewInit@0 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwInit referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwTerminate referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwWindowHint referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwCreateWindow referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwWindowShouldClose referenced in function "void __cdecl renderLoop(struct GLFWwindow *)" (?renderLoop@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwSetWindowShouldClose referenced in function "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwSetFramebufferSizeCallback referenced in function "void __cdecl init(struct GLFWwindow *)" (?init@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwPollEvents referenced in function "void __cdecl renderLoop(struct GLFWwindow *)" (?renderLoop@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwGetKey referenced in function "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwGetTime referenced in function "void __cdecl renderScene(struct GLFWwindow *)" (?renderScene@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol _glfwMakeContextCurrent referenced in function _main
+main.obj : error LNK2019: unresolved external symbol _glfwSwapBuffers referenced in function "void __cdecl renderScene(struct GLFWwindow *)" (?renderScene@@YAXPAUGLFWwindow@@@Z)
+main.obj : error LNK2019: unresolved external symbol __imp____glewGetUniformLocation referenced in function "void __cdecl drawObjectColor(struct Core::RenderContext &,struct glm::mat<4,4,float,0>,struct glm::vec<3,float,0>,float,float)" (?drawObjectColor@@YAXAAURenderContext@Core@@U?$mat@$03$03M$0A@@glm@@U?$vec@$02M$0A@@4@MM@Z)
+Texture.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+main.obj : error LNK2019: unresolved external symbol __imp____glewUniform1f referenced in function "void __cdecl drawObjectColor(struct Core::RenderContext &,struct glm::mat<4,4,float,0>,struct glm::vec<3,float,0>,float,float)" (?drawObjectColor@@YAXAAURenderContext@Core@@U?$mat@$03$03M$0A@@glm@@U?$vec@$02M$0A@@4@MM@Z)
+main.obj : error LNK2019: unresolved external symbol __imp____glewUniform3f referenced in function "void __cdecl drawObjectColor(struct Core::RenderContext &,struct glm::mat<4,4,float,0>,struct glm::vec<3,float,0>,float,float)" (?drawObjectColor@@YAXAAURenderContext@Core@@U?$mat@$03$03M$0A@@glm@@U?$vec@$02M$0A@@4@MM@Z)
+main.obj : error LNK2019: unresolved external symbol __imp____glewUniformMatrix4fv referenced in function "void __cdecl drawObjectColor(struct Core::RenderContext &,struct glm::mat<4,4,float,0>,struct glm::vec<3,float,0>,float,float)" (?drawObjectColor@@YAXAAURenderContext@Core@@U?$mat@$03$03M$0A@@glm@@U?$vec@$02M$0A@@4@MM@Z)
+main.obj : error LNK2019: unresolved external symbol __imp____glewUseProgram referenced in function "void __cdecl renderScene(struct GLFWwindow *)" (?renderScene@@YAXPAUGLFWwindow@@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewBindBuffer referenced in function "public: void __thiscall Core::RenderContext::initFromAssimpMesh(struct aiMesh *)" (?initFromAssimpMesh@RenderContext@Core@@QAEXPAUaiMesh@@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewBufferData referenced in function "public: void __thiscall Core::RenderContext::initFromAssimpMesh(struct aiMesh *)" (?initFromAssimpMesh@RenderContext@Core@@QAEXPAUaiMesh@@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewBufferSubData referenced in function "public: void __thiscall Core::RenderContext::initFromAssimpMesh(struct aiMesh *)" (?initFromAssimpMesh@RenderContext@Core@@QAEXPAUaiMesh@@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewGenBuffers referenced in function "public: void __thiscall Core::RenderContext::initFromAssimpMesh(struct aiMesh *)" (?initFromAssimpMesh@RenderContext@Core@@QAEXPAUaiMesh@@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewEnableVertexAttribArray referenced in function "void __cdecl Core::DrawVertexArray(struct Core::VertexData const &)" (?DrawVertexArray@Core@@YAXABUVertexData@1@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewVertexAttribPointer referenced in function "void __cdecl Core::DrawVertexArray(struct Core::VertexData const &)" (?DrawVertexArray@Core@@YAXABUVertexData@1@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewBindVertexArray referenced in function "void __cdecl Core::DrawContext(struct Core::RenderContext &)" (?DrawContext@Core@@YAXAAURenderContext@1@@Z)
+Render_Utils.obj : error LNK2019: unresolved external symbol __imp____glewGenVertexArrays referenced in function "public: void __thiscall Core::RenderContext::initFromAssimpMesh(struct aiMesh *)" (?initFromAssimpMesh@RenderContext@Core@@QAEXPAUaiMesh@@@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewAttachShader referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewCompileShader referenced in function "private: unsigned int __thiscall Core::Shader_Loader::CreateShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,char *)" (?CreateShader@Shader_Loader@Core@@AAEIIV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewCreateProgram referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewCreateShader referenced in function "private: unsigned int __thiscall Core::Shader_Loader::CreateShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,char *)" (?CreateShader@Shader_Loader@Core@@AAEIIV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewDeleteProgram referenced in function "public: void __thiscall Core::Shader_Loader::DeleteProgram(unsigned int)" (?DeleteProgram@Shader_Loader@Core@@QAEXI@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewDeleteShader referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewDetachShader referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewGetProgramInfoLog referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewGetProgramiv referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewGetShaderInfoLog referenced in function "private: unsigned int __thiscall Core::Shader_Loader::CreateShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,char *)" (?CreateShader@Shader_Loader@Core@@AAEIIV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewGetShaderiv referenced in function "private: unsigned int __thiscall Core::Shader_Loader::CreateShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,char *)" (?CreateShader@Shader_Loader@Core@@AAEIIV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewLinkProgram referenced in function "public: unsigned int __thiscall Core::Shader_Loader::CreateProgram(char *,char *)" (?CreateProgram@Shader_Loader@Core@@QAEIPAD0@Z)
+Shader_Loader.obj : error LNK2019: unresolved external symbol __imp____glewShaderSource referenced in function "private: unsigned int __thiscall Core::Shader_Loader::CreateShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,char *)" (?CreateShader@Shader_Loader@Core@@AAEIIV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z)
+Texture.obj : error LNK2019: unresolved external symbol __imp____glewActiveTexture referenced in function "void __cdecl Core::SetActiveTexture(unsigned int,char const *,unsigned int,int)" (?SetActiveTexture@Core@@YAXIPBDIH@Z)
+Texture.obj : error LNK2019: unresolved external symbol __imp____glewUniform1i referenced in function "void __cdecl Core::SetActiveTexture(unsigned int,char const *,unsigned int,int)" (?SetActiveTexture@Core@@YAXIPBDIH@Z)
+Texture.obj : error LNK2019: unresolved external symbol __imp____glewGenerateMipmap referenced in function "unsigned int __cdecl Core::LoadTexture(char const *)" (?LoadTexture@Core@@YAIPBD@Z)
+D:\hoojnia\gk\\External resourses\GLFW\lib-vc2022\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+D:\hoojnia\gk\\External resourses\ASSIMP\\assimp-vc143-mtd.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+D:\hoojnia\gk\\External resourses\GLEW\lib\Release\x64\glew32.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+D:\hoojnia\gk\Debug\Project.exe : fatal error LNK1120: 42 unresolved externals

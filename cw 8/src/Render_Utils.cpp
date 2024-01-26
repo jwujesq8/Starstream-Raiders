@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "glew.h"
+#include "GL/glew.h"
 #include "freeglut.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

@@ -25,7 +25,6 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\ex_8_1.hpp" />
-    <ClInclude Include="src\ex_8_2.hpp" />
     <ClInclude Include="src\objload.h" />
     <ClInclude Include="src\Render_Utils.h" />
     <ClInclude Include="src\Shader_Loader.h" />
@@ -76,14 +75,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)dependencies\freeglut\lib;$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)dependencies\freeglut\include\GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(SolutionDir)/External resourses/freeglut/lib/$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/External resourses/freeglut/include/GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)dependencies\freeglut\lib;$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)dependencies\freeglut\include\GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(SolutionDir)/External resourses/freeglut/lib/$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/External resourses/freeglut/include/GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,13 +91,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;$(SolutionDir)/External resourses/ASSIMP/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;freeglut.lib;glew32.lib;zlibd.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mtd.lib;freeglut.lib;glew32.lib;zlibd.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/x64;$(SolutionDir)/External resourses/ASSIMP/;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,15 +109,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;$(SolutionDir)/External resourses/ASSIMP/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;freeglut.lib;glew32.lib;zlibd.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mtd.lib;freeglut.lib;glew32.lib;zlibd.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/GLEW/lib/Release/x64;$(SolutionDir)/External resourses/ASSIMP/;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
