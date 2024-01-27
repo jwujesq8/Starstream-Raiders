@@ -1,4 +1,79 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj, grk-cw8.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿D:\Programs\Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj, grk-cw8.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Box.cpp
+  Camera.cpp
+  main.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+  (compiling source file 'src/main.cpp')
+  D:\hoojnia\gk\External resourses\GLFW\include\GLFW\glfw3.h(123,1):
+  see previous definition of 'APIENTRY'
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(63,20): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(86,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(141,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(151,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(152,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         with
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         [
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:             T=float
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(174,156): warning C4305:         ]
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(175,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(175,29): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(140,12): warning C4101: 'transformation': unreferenced local variable
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(257,21): warning C4305: '-=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(259,21): warning C4305: '+=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+  Render_Utils.cpp
+  Shader_Loader.cpp
+  Texture.cpp
+  Generating Code...
+  image_DXT.c
+  image_helper.c
+D:\hoojnia\gk\cw 8\src\SOIL\image_DXT.c(92,9): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(325,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(366,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(373,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(415,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\hoojnia\gk\cw 8\src\SOIL\image_helper.c(422,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  SOIL.c
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1719,36): warning C4018: '<=': signed/unsigned mismatch
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1729,19): warning C4018: '<': signed/unsigned mismatch
+D:\hoojnia\gk\cw 8\src\SOIL\SOIL.c(1841,6): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  stb_image_aug.c
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(362,19): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(366,19): warning C4018: '>': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(390,19): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+D:\hoojnia\gk\cw 8\src\SOIL\stbi_DDS_aug_c.h(427,19): warning C4018: '<': signed/unsigned mismatch
+  (compiling source file 'src/SOIL/stb_image_aug.c')
+  
+  Generating Code...
 Box.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  grk-cw8.vcxproj -> D:\uni\Starstream-Raiders\Debug\Project.exe
+  grk-cw8.vcxproj -> D:\hoojnia\gk\Debug\Project.exe
