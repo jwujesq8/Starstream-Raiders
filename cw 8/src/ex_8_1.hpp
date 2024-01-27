@@ -143,17 +143,6 @@ void renderScene(GLFWwindow* window)
 
 	glUseProgram(program);
 
-	float distanceBetweenBalls = 2.5;
-	for (int x = -3; x <= 3; x++)
-	{
-		for (int y = -3; y <= 3; y++)
-		{
-			float metallic = (float(x)) / 7.0;
-			float roughness = (float(y)) / 7.0;
-			drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(x * distanceBetweenBalls, y * distanceBetweenBalls, 0)), glm::vec3(0.95, 0.1, 0.1), roughness, metallic);
-		}
-	}
-
 	
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
