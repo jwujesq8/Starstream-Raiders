@@ -2,6 +2,8 @@
  
 #include "GL/glew.h"
 #include "freeglut.h"
+#include <vector>
+#include <iostream>
 
 namespace Core
 {
@@ -12,4 +14,7 @@ namespace Core
 	// programID - identyfikator aktualnego programu karty graficznej
 	// textureUnit - indeks jednostki teksturujacej - liczba od 0 do 7. Jezeli uzywa sie wielu tekstur w jednym shaderze, to kazda z nich nalezy powiazac z inna jednostka.
 	void SetActiveTexture(GLuint textureID, const char * shaderVariableName, GLuint programID, int textureUnit);
+
+	GLuint LoadSkybox(std::vector<std::string> paths);
+
 }
