@@ -5,9 +5,11 @@ layout(location = 1) in vec3 vertexNormal;
 layout(location = 2) in vec2 vertexTexCoord;
 
 uniform mat4 transformation;
+out vec2 fragmentTexCoord;
 
 void main()
 {
+	fragmentTexCoord = vertexTexCoord;
 	gl_Position = transformation * vec4(vertexPosition, 1.0);
 	//gl_Position = vec4(vertexPosition, 1.0);
 }

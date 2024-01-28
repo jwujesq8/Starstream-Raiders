@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec3 vertexNormal;
-layout(location = 2) in vec2 vertexTexCoord1;
+layout(location = 2) in vec2 vertexTexCoord;
 layout(location = 3) in vec3 vertexTangent;
 layout(location = 4) in vec3 vertexBitangent;
 
@@ -19,12 +19,12 @@ uniform vec3 cameraPos;
 out vec3 viewDirTS;
 out vec3 lightDirTS;
 out vec3 spotlightDirTS;
-out vec2 vertexTexCoord;
+out vec2 fragTexCoord;
 
 void main()
 {
 	worldPos = (modelMatrix* vec4(vertexPosition,1)).xyz;
-	vecNormal = normalize((modelMatrix* vec4(vertexNormal,0)).xyz);
+	vecNormal = normalize((modelMatrix * vec4(vertexNormal,0)).xyz);
 	gl_Position = transformation * vec4(vertexPosition, 1.0);
 	vec3 w_tangent = normalize(mat3(modelMatrix)*vertexTangent);
 	vec3 w_bitangent = normalize(mat3(modelMatrix)*vertexBitangent);
@@ -36,7 +36,7 @@ void main()
 	lightDirTS = TBN*L;
 	vec3 SL = normalize(spotlightPos-worldPos);
 	spotlightDirTS = TBN*SL;
-	vertexTexCoord = vertexTexCoord1;
+	fragTexCoord = vertexTexCoord;
 
 
 }

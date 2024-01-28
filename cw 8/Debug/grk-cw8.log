@@ -5,48 +5,48 @@ C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(1
   D:\uni\Starstream-Raiders\External resourses\GLFW\include\GLFW\glfw3.h(123,1):
   see previous definition of 'APIENTRY'
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(80,20): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(105,20): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(103,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(128,10): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(179,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(216,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,147): warning C4305: 'argument': truncation from 'double' to 'T'
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,147): warning C4305:         with
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,147): warning C4305:         [
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,147): warning C4305:             T=float
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,147): warning C4305:         ]
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,147): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,147): warning C4305:         with
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,147): warning C4305:         [
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,147): warning C4305:             T=float
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,147): warning C4305:         ]
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,158): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,158): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(185,153): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(222,153): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(207,156): warning C4305: 'argument': truncation from 'double' to 'T'
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(207,156): warning C4305:         with
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(207,156): warning C4305:         [
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(207,156): warning C4305:             T=float
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(207,156): warning C4305:         ]
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(255,156): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(255,156): warning C4305:         with
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(255,156): warning C4305:         [
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(255,156): warning C4305:             T=float
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(255,156): warning C4305:         ]
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(208,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(256,36): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(208,29): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(256,31): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(178,12): warning C4101: 'transformation': unreferenced local variable
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(215,12): warning C4101: 'transformation': unreferenced local variable
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(304,21): warning C4305: '-=': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(376,21): warning C4305: '-=': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
-D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(306,21): warning C4305: '+=': truncation from 'double' to 'float'
+D:\uni\Starstream-Raiders\cw 8\src\ex_8_1.hpp(378,21): warning C4305: '+=': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
 Box.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification

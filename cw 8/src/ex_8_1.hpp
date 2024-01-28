@@ -25,7 +25,7 @@ namespace texture {
 	GLuint textureAlbedo; GLuint textureNormal; GLuint textureMetallic; GLuint textureRoughness; GLuint textureAO;
 
 
-	GLuint grid;
+	GLuint empty;
 
 	GLuint earthNormal;
 	GLuint asteroidNormal;
@@ -96,8 +96,8 @@ float aspectRatio = 1.f;
 
 float exposition = 1.f;
 
-glm::vec3 lightPos = glm::vec3(-8, 4, 2);
-glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8);//*100.0f;
+glm::vec3 lightPos = glm::vec3(0.f, 10.f, 0.f);
+glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*100.0f;
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
@@ -176,6 +176,18 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 
 }
 
+void drawStar(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint texture)
+{
+	glUseProgram(programSun);
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(programTex, "transformation"), 1, GL_FALSE, (float*)&transformation);
+
+	Core::SetActiveTexture(texture, "texture1", programSun, 0);
+
+	Core::DrawContext(context);
+}
+
 void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID, GLuint normal, GLuint roughness, GLuint metallic) {
 	glUseProgram(programTex);
 	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
@@ -208,9 +220,20 @@ void renderScene(GLFWwindow* window)
 	glUseProgram(program);
 
 	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.25f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
 		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
-
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
+		texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.07f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(26.0, 0, 0)),
+		texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.045f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(38.0, 0, 0)),
+		texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.030f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(43.0, 0, 0)),
+		texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
+		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
+	//drawStar(sun, glm::mat4(1.0), texture::sun);
+	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
 
 	
 
@@ -281,34 +304,34 @@ void init(GLFWwindow* window)
 
 	texture::sun = Core::LoadTexture("./textures/Planets/sun.jpg");
 	texture::planetContinentBase = Core::LoadTexture("./textures/Planets/planet_continental_Base_Color.jpg");
-	texture::planetContinentNormal = Core::LoadTexture("./textures/Planets/planet_continental_Normal_OpenGL.jpg");
-	texture::planetContinentRoughness = Core::LoadTexture("./textures/Planets/planet_continental_Roughness.jpg");
-	texture::planetContinentMetallic = Core::LoadTexture("./textures/Planets/planet_continental_Metallic.jpg");
+	texture::planetContinentNormal = Core::LoadTexture("./textures/Planets/planet_continental_Normal_OpenGL.png");
+	texture::planetContinentRoughness = Core::LoadTexture("./textures/Planets/planet_continental_Roughness.png");
+	texture::planetContinentMetallic = Core::LoadTexture("./textures/Planets/planet_continental_Metallic.png");
 
 	texture::planetBarrenBase = Core::LoadTexture("./textures/Planets/planet_barren_Base_Color.jpg");
-	texture::planetBarrenNormal = Core::LoadTexture("./textures/Planets/planet_barren_Normal_OpenGL.jpg");
-	texture::planetBarrenRoughness = Core::LoadTexture("./textures/Planets/planet_barren_Roughness.jpg");
+	texture::planetBarrenNormal = Core::LoadTexture("./textures/Planets/planet_barren_Normal_OpenGL.png");
+	texture::planetBarrenRoughness = Core::LoadTexture("./textures/Planets/planet_barren_Roughness.png");
 
 	texture::planetFrozenBase = Core::LoadTexture("./textures/Planets/planet_frozen_Base_Color.jpg");
-	texture::planetFrozenNormal = Core::LoadTexture("./textures/Planets/planet_frozen_Normal_OpenGL.jpg");
-	texture::planetFrozenRoughness = Core::LoadTexture("./textures/Planets/planet_frozen_Roughness.jpg");
+	texture::planetFrozenNormal = Core::LoadTexture("./textures/Planets/planet_frozen_Normal_OpenGL.png");
+	texture::planetFrozenRoughness = Core::LoadTexture("./textures/Planets/planet_frozen_Roughness.png");
 
 	texture::planetGasBase = Core::LoadTexture("./textures/Planets/planet_gas_Base_Color.jpg");
-	texture::planetGasNormal = Core::LoadTexture("./textures/Planets/planet_gas_Normal_OpenGL.jpg");
+	texture::planetGasNormal = Core::LoadTexture("./textures/Planets/planet_gas_Normal_OpenGL.png");
 	texture::planetGasClouds = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Base_Color.jpg");
-	texture::planetGasCloudsNormal = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Normal_OpenGL.jpg");
-	texture::planetGasCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Opacity.jpg");
+	texture::planetGasCloudsNormal = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Normal_OpenGL.png");
+	texture::planetGasCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Opacity.png");
 
 	texture::planetLavaBase = Core::LoadTexture("./textures/Planets/planet_lava_Base_Color.jpg");;
-	texture::planetLavaNormal = Core::LoadTexture("./textures/Planets/planet_lava_Normal_OpenGL.jpg");
-	texture::planetLavaRoughness= Core::LoadTexture("./textures/Planets/planet_lava_Roughness.jpg");;
+	texture::planetLavaNormal = Core::LoadTexture("./textures/Planets/planet_lava_Normal_OpenGL.png");
+	texture::planetLavaRoughness= Core::LoadTexture("./textures/Planets/planet_lava_Roughness.png");;
 
-	texture::planetSmacBase = Core::LoadTexture("./textures/Planets/planet_smac_Base_Color.jpg");;
-	texture::planetSmacNormal = Core::LoadTexture("./textures/Planets/planet_smac_Normal_OpenGL.jpg");
-	texture::planetSmacRoughness = Core::LoadTexture("./textures/Planets/planet_smac_Roughness.jpg");
+	texture::planetSmacBase = Core::LoadTexture("./textures/Planets/planet_smac_Base_Color.png");;
+	texture::planetSmacNormal = Core::LoadTexture("./textures/Planets/planet_smac_Normal_OpenGL.png");
+	texture::planetSmacRoughness = Core::LoadTexture("./textures/Planets/planet_smac_Roughness.png");
 	texture::planetSmacClouds = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Base_Color.jpg");
-	texture::planetSmacCloudsNormal = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Normal_OpenGL.jpg");
-	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.jpg");
+	texture::planetSmacCloudsNormal = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Normal_OpenGL.png");
+	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.png");
 
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 

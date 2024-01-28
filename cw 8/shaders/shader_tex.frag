@@ -29,7 +29,7 @@ in vec3 worldPos;
 in vec3 viewDirTS;
 in vec3 lightDirTS;
 in vec3 test;
-in vec2 vertexTexCoord;
+in vec2 fragTexCoord;
 
 out vec4 outColor;
 
@@ -93,18 +93,18 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 
 void main()
 {
-	bColor = texture2D(baseColor, vertexTexCoord).rgb;
-	//vec3 albedoTex = texture2D(textureAlbedo, vertexTexCoord).rgb;
-	vec3 normalTex= texture2D(normalMap, vertexTexCoord).rgb; // = vec3(0,0,1)
-	vec3 metallic = texture2D(metalMap, vertexTexCoord).rgb + additionalMetallic;
-	float roughness = texture2D(rougMap, vertexTexCoord).r + additionalRoughness;
+	bColor = texture2D(baseColor, fragTexCoord).rgb;
+	//vec3 albedoTex = texture2D(textureAlbedo, fragTexCoord).rgb;
+	vec3 normalTex= texture2D(normalMap, fragTexCoord).rgb; // = vec3(0,0,1)
+	vec3 metallic = texture2D(metalMap, fragTexCoord).rgb + additionalMetallic;
+	float roughness = texture2D(rougMap, fragTexCoord).r + additionalRoughness;
 
-	//vec3 aoTex = texture2D(textureAO, vVertexTexCoord).rgb;
+	//vec3 aoTex = texture2D(textureAO, fragTexCoord).rgb;
 
 
 
 	vec3 Lo = vec3(0,0,0);
-	vec3 N = vec3(0,0,1);
+	vec3 N = (texture2D(normalMap, fragTexCoord).rgb * 2) - 1;
 	vec3 V = normalize(viewDirTS);
 	
 	
@@ -131,13 +131,12 @@ void main()
 		
   
 	float NdotL = max(dot(N, L), 0.0);        
-	Lo += (kD * albedoTex / PI + specular) * attenuatedlightColor * NdotL;
+	Lo += (kD * bColor / PI + specular) * attenuatedlightColor * NdotL;
+
 	
 	vec3 ambient = vec3(0.03) * albedoTex;
-	vec3 color   = ambient + Lo + bColor;//phongLight(normalize(lightDirTS), lightColor, normalize(vecNormal), normalize(viewDirTS));  
+	vec3 color   = ambient + Lo;
 	color = color / (color + vec3(1.0));
 	color = pow(color, vec3(1.0/2.2));
 	outColor = vec4(color, 1);
-	outColor= vec4(phongLight(normalize(lightDirTS), lightColor, normalize(vecNormal), normalize(viewDirTS)), 1);
-	
 }
