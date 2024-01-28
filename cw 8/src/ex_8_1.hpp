@@ -336,6 +336,15 @@ void init(GLFWwindow* window)
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/spaceship.obj", shipContext);
+	std::vector<std::string> skyboxPaths = {
+			"textures/skybox-right.jpg",
+			"textures/skybox-left.jpg",
+			"textures/skybox-top.jpg",
+			"textures/skybox-bottom.jpg",
+			"textures/skybox-back.jpg",
+			"textures/skybox-front.jpg"
+	};
+	texture::skybox = Core::LoadSkybox(skyboxPaths);
 
 	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
 	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
