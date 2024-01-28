@@ -24,6 +24,8 @@ namespace texture {
 	GLuint ship;
 	GLuint textureAlbedo; GLuint textureNormal; GLuint textureMetallic; GLuint textureRoughness; GLuint textureAO;
 
+	GLuint skybox;
+
 
 	GLuint grid;
 
@@ -36,10 +38,12 @@ namespace texture {
 GLuint program;
 GLuint programSun;
 GLuint programTex;
+GLuint programSkybox;
 Core::Shader_Loader shaderLoader;
 
 Core::RenderContext shipContext;
 Core::RenderContext sphereContext;
+Core::RenderContext cubeContext;
 
 glm::vec3 cameraPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
@@ -133,17 +137,35 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 	Core::DrawContext(context);
 
 }
+
+void drawSkybox(glm::mat4 modelMatrix) {
+	glUseProgram(programSkybox);
+	glDisable(GL_DEPTH_TEST);
+
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(programSkybox, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture::skybox);
+	Core::DrawContext(cubeContext);
+
+	glEnable(GL_DEPTH_TEST);
+}
+
+
 void renderScene(GLFWwindow* window)
 {
-	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 transformation;
 	float time = glfwGetTime();
 
+	drawSkybox(glm::translate(glm::mat4(1.0), spaceshipPos));
 
 	glUseProgram(program);
 
-	
+
+	drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
+
+#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -155,10 +177,6 @@ void renderScene(GLFWwindow* window)
 		});
 
 
-	//drawObjectColor(shipContext,
-	//	glm::translate(cameraPos + 1.5 * cameraDir + cameraUp * -0.5f) * inveseCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
-	//	glm::vec3(0.3, 0.3, 0.5)
-	//	);
 	drawObjectColor(shipContext,
 		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.1)),
 		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
@@ -166,6 +184,10 @@ void renderScene(GLFWwindow* window)
 
 	spotlightPos = spaceshipPos + 0.5f * spaceshipDir;
 	spotlightConeDir = spaceshipDir;
+
+#pragma endregion
+
+	
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -195,9 +217,26 @@ void init(GLFWwindow* window)
 	glEnable(GL_DEPTH_TEST);
 	program = shaderLoader.CreateProgram("shaders/shader_8_1.vert", "shaders/shader_8_1.frag");
 	programSun = shaderLoader.CreateProgram("shaders/shader_8_sun.vert", "shaders/shader_8_sun.frag");
+	//programTex = shaderLoader.CreateProgram("shaders/shader_8_tex.vert", "shaders/shader_8_tex.frag");
+	programSkybox = shaderLoader.CreateProgram("shaders/shader_skybox.vert", "shaders/shader_skybox.frag");
+
+	glGenTextures(1, &texture::skybox);
+	
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
+	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/spaceship.obj", shipContext);
+
+	std::vector<std::string> skyboxPaths = {
+			"textures/skybox-right.jpg",
+			"textures/skybox-left.jpg",
+			"textures/skybox-top.jpg",
+			"textures/skybox-bottom.jpg",
+			"textures/skybox-back.jpg",
+			"textures/skybox-front.jpg"
+	};
+
+	texture::skybox = Core::LoadSkybox(skyboxPaths);
 
 	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
 	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
