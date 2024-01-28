@@ -15,6 +15,9 @@
 #include <assimp/postprocess.h>
 #include <string>
 #include <gtx/euler_angles.hpp>
+#include <GLFW/glfw3.h>
+#include <list>
+#include "SpaceshipModelList.h"
 
 
 namespace texture {
@@ -61,6 +64,10 @@ glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
 glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*10.0f;
 float spotlightPhi = 3.14 / 3;
+
+SpaceshipModel currentSpaceship;
+SpaceshipModelList spaceshipModelList;
+float scaleModelIndex = 0.1;
 
 
 glm::mat4 createCameraMatrix()
@@ -160,7 +167,7 @@ void renderScene(GLFWwindow* window)
 	//	glm::vec3(0.3, 0.3, 0.5)
 	//	);
 	drawObjectColor(shipContext,
-		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.1)),
+		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
 		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
 	);
 
@@ -196,13 +203,17 @@ void init(GLFWwindow* window)
 	program = shaderLoader.CreateProgram("shaders/shader_8_1.vert", "shaders/shader_8_1.frag");
 	programSun = shaderLoader.CreateProgram("shaders/shader_8_sun.vert", "shaders/shader_8_sun.frag");
 
-	loadModelToContext("./models/sphere.obj", sphereContext);
-	loadModelToContext("./models/spaceship.obj", shipContext);
+	
+	spaceshipModelList.fillList();
+	currentSpaceship = spaceshipModelList.getNextModel();
+	loadModelToContext(currentSpaceship.mainModelPath, shipContext);
+	texture::textureAlbedo = Core::LoadTexture(currentSpaceship.textureBaseColorPath.data());
+	texture::textureNormal = Core::LoadTexture(currentSpaceship.textureNormalPath.data());
+	texture::textureMetallic = Core::LoadTexture(currentSpaceship.textureMetallicPath.data());
+	texture::textureRoughness = Core::LoadTexture(currentSpaceship.textureRoughnessPath.data());
 
-	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
-	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
-	texture::textureMetallic = Core::LoadTexture("./textures/rustediron2_metallic.png");
-	texture::textureRoughness = Core::LoadTexture("./textures/rustediron2_roughness.png");
+	loadModelToContext("./models/sphere.obj", sphereContext);
+	
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
 
@@ -212,6 +223,9 @@ void shutdown(GLFWwindow* window)
 {
 	shaderLoader.DeleteProgram(program);
 }
+
+
+
 
 //obsluga wejscia
 void processInput(GLFWwindow* window)
@@ -246,6 +260,31 @@ void processInput(GLFWwindow* window)
 		exposition -= 0.05;
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 		exposition += 0.05;
+
+	//change the spaceships model (it's available only on the station but this bound will be added LATER !!)
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
+		currentSpaceship = spaceshipModelList.getNextModel();
+
+		//change scaleModelIndex
+		if (currentSpaceship.mainModelPath.find("_0") != std::string::npos){
+			scaleModelIndex = 0.1;
+		}
+		else if (currentSpaceship.mainModelPath.find("_1") != std::string::npos) {
+			scaleModelIndex = 0.05;
+		}
+		else if (currentSpaceship.mainModelPath.find("_2") != std::string::npos) {
+			scaleModelIndex = 0.08;
+		}
+		else if (currentSpaceship.mainModelPath.find("_3") != std::string::npos) {
+			scaleModelIndex = 0.008;
+		}
+
+		loadModelToContext(currentSpaceship.mainModelPath, shipContext);
+		texture::textureAlbedo = Core::LoadTexture(currentSpaceship.textureBaseColorPath.data());
+		texture::textureNormal = Core::LoadTexture(currentSpaceship.textureNormalPath.data());
+		texture::textureMetallic = Core::LoadTexture(currentSpaceship.textureMetallicPath.data());
+		texture::textureRoughness = Core::LoadTexture(currentSpaceship.textureRoughnessPath.data());
+	}
 
 	//cameraDir = glm::normalize(-cameraPos);
 
