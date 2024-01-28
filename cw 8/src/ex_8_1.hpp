@@ -239,6 +239,8 @@ void renderScene(GLFWwindow* window)
 	
 	glUseProgram(program);
 
+	#pragma region planets
+	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
 	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
 		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
@@ -253,28 +255,13 @@ void renderScene(GLFWwindow* window)
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
 		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
 	//drawStar(sun, glm::mat4(1.0), texture::sun);
-	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
-
-	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
-		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
-		texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.07f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(26.0, 0, 0)),
-		texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.045f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(38.0, 0, 0)),
-		texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.030f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(43.0, 0, 0)),
-		texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
-		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
-	//drawStar(sun, glm::mat4(1.0), texture::sun);
-	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
+	
 
 
-	drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
+	//drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
+#pragma endregion
 
-#pragma region spaceship
+	#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -336,6 +323,8 @@ void init(GLFWwindow* window)
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/spaceship.obj", shipContext);
+	loadModelToContext("./models/Ring.obj", station);
+	loadModelToContext("./models/planet.obj", planet);
 	std::vector<std::string> skyboxPaths = {
 			"textures/skybox-right.jpg",
 			"textures/skybox-left.jpg",
@@ -381,7 +370,7 @@ void init(GLFWwindow* window)
 	texture::planetSmacClouds = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Base_Color.jpg");
 	texture::planetSmacCloudsNormal = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Normal_OpenGL.png");
 	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.png");
-
+	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
 
