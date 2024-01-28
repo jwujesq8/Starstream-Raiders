@@ -1,10 +1,55 @@
+<<<<<<< HEAD
+﻿E:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj, grk-cw8.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+=======
 ﻿D:\Programs\Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (grk-cw3.vcxproj, grk-cw4.vcxproj, grk-cw5.vcxproj, grk-cw6.vcxproj, grk-cw8.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+>>>>>>> 1a91a5f497673a133ea6a64c8ecebb30af6241bb
   main.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
   (compiling source file 'src/main.cpp')
-  D:\hoojnia\gk\External resourses\GLFW\include\GLFW\glfw3.h(123,1):
+  E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\External resourses\GLFW\include\GLFW\glfw3.h(123,1):
   see previous definition of 'APIENTRY'
   
+<<<<<<< HEAD
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(66,20): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(70,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(93,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(148,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(171,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(171,29): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(147,12): warning C4101: 'transformation': unreferenced local variable
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(260,21): warning C4305: '-=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(262,21): warning C4305: '+=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(270,22): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(273,22): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(276,22): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\cw 8\src\ex_8_1.hpp(279,22): warning C4305: '=': truncation from 'double' to 'float'
+  (compiling source file 'src/main.cpp')
+  
+=======
 D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(109,20): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
@@ -49,6 +94,7 @@ D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(414,21): warning C4305: '-=': truncation from 
 D:\hoojnia\gk\cw 8\src\ex_8_1.hpp(416,21): warning C4305: '+=': truncation from 'double' to 'float'
   (compiling source file 'src/main.cpp')
   
+>>>>>>> 1a91a5f497673a133ea6a64c8ecebb30af6241bb
 Box.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  grk-cw8.vcxproj -> D:\hoojnia\gk\Debug\Project.exe
+  grk-cw8.vcxproj -> E:\Pulpit\unik\5sem\grafika\Starstream-Raiders\Debug\Project.exe

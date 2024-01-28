@@ -89,6 +89,9 @@
     <ClInclude Include="src\ex_8_1.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SpaceshipModelList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_sun.vert">
