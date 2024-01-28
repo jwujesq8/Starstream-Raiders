@@ -37,10 +37,12 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader_8_1.frag" />
-    <None Include="shaders\shader_8_1.vert" />
-    <None Include="shaders\shader_8_sun.frag" />
-    <None Include="shaders\shader_8_sun.vert" />
+    <None Include="shaders\shader_tex.frag" />
+    <None Include="shaders\shader_tex.vert" />
+    <None Include="shaders\shader_color.frag" />
+    <None Include="shaders\shader_color.vert" />
+    <None Include="shaders\shader_sun.frag" />
+    <None Include="shaders\shader_sun.vert" />
     <None Include="shaders\shader_skybox.frag" />
     <None Include="shaders\shader_skybox.vert" />
   </ItemGroup>

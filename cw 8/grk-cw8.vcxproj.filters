@@ -91,16 +91,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader_8_sun.vert">
+    <None Include="shaders\shader_sun.vert">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="shaders\shader_8_sun.frag">
+    <None Include="shaders\shader_sun.frag">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="shaders\shader_8_1.frag">
+    <None Include="shaders\shader_color.frag">
       <Filter>Shader Files</Filter>
     </None>
-    <None Include="shaders\shader_8_1.vert">
+    <None Include="shaders\shader_color.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_tex.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_tex.vert">
       <Filter>Shader Files</Filter>
     </None>
     <None Include="shaders\shader_skybox.vert">
