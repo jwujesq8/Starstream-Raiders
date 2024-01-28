@@ -30,6 +30,44 @@ namespace texture {
 	GLuint earthNormal;
 	GLuint asteroidNormal;
 	GLuint shipNormal;
+
+	GLuint planetContinentBase;
+	GLuint planetContinentNormal;
+	GLuint planetContinentRoughness;
+	GLuint planetContinentMetallic;
+	GLuint planetContinentClouds;
+	GLuint planetContinentCloudsNormal;
+	GLuint planetContinentCloudsOpacity;
+
+	GLuint planetBarrenBase;
+	GLuint planetBarrenNormal;
+	GLuint planetBarrenRoughness;
+	
+	GLuint planetFrozenBase;
+	GLuint planetFrozenNormal;
+	GLuint planetFrozenRoughness;
+
+	GLuint planetGasBase;
+	GLuint planetGasNormal;
+	GLuint planetGasClouds;
+	GLuint planetGasCloudsNormal;
+	GLuint planetGasCloudsOpacity;
+
+	GLuint planetLavaBase;
+	GLuint planetLavaNormal;
+	GLuint planetLavaRoughness;
+
+	GLuint planetSmacBase;
+	GLuint planetSmacNormal;
+	GLuint planetSmacRoughness;
+	GLuint planetSmacClouds;
+	GLuint planetSmacCloudsNormal;
+	GLuint planetSmacCloudsOpacity;
+
+	GLuint sun;
+
+
+
 }
 
 
@@ -40,6 +78,10 @@ Core::Shader_Loader shaderLoader;
 
 Core::RenderContext shipContext;
 Core::RenderContext sphereContext;
+Core::RenderContext station;
+Core::RenderContext planet;
+Core::RenderContext sun;
+
 
 glm::vec3 cameraPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
@@ -55,7 +97,7 @@ float aspectRatio = 1.f;
 float exposition = 1.f;
 
 glm::vec3 lightPos = glm::vec3(-8, 4, 2);
-glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*100.0f;
+glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8);//*100.0f;
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
@@ -101,7 +143,7 @@ glm::mat4 createPerspectiveMatrix()
 }
 
 void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::vec3 color, float roughness, float metallic) {
-	
+	glUseProgram(program);
 	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
 	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
 	glUniformMatrix4fv(glGetUniformLocation(program, "transformation"), 1, GL_FALSE, (float*)&transformation);
@@ -109,7 +151,7 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 
 	glUniform1f(glGetUniformLocation(program, "exposition"), exposition);
 
-	glUniform3f(glGetUniformLocation(program, "color"), color.x, color.y, color.z);
+	glUniform3f(glGetUniformLocation(program, "baseColor"), color.x, color.y, color.z);
 
 	glUniform3f(glGetUniformLocation(program, "cameraPos"), cameraPos.x, cameraPos.y, cameraPos.z);
 
@@ -133,6 +175,27 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 	Core::DrawContext(context);
 
 }
+
+void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint textureID, GLuint normal, GLuint roughness, GLuint metallic) {
+	glUseProgram(programTex);
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(programTex, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glUniformMatrix4fv(glGetUniformLocation(programTex, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
+	glUniform3f(glGetUniformLocation(programTex, "lightPos"), 0, 0, 0);
+	glUniform3f(glGetUniformLocation(program, "lightColor"), lightColor.x, lightColor.y, lightColor.z);
+
+	glUniform3f(glGetUniformLocation(program, "cameraPos"), cameraPos.x, cameraPos.y, cameraPos.z);
+
+	Core::SetActiveTexture(textureID, "baseColor", programTex, 0);
+	Core::SetActiveTexture(normal, "normalMap", programTex, 1);
+	Core::SetActiveTexture(roughness, "rougMap", programTex, 2);
+	Core::SetActiveTexture(metallic, "metalMap", programTex, 3);
+
+	Core::DrawContext(context);
+
+}
+
 void renderScene(GLFWwindow* window)
 {
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
@@ -141,7 +204,13 @@ void renderScene(GLFWwindow* window)
 	float time = glfwGetTime();
 
 
+	
 	glUseProgram(program);
+
+	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.25f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
+		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
+
 
 	
 
@@ -161,7 +230,7 @@ void renderScene(GLFWwindow* window)
 	//	);
 	drawObjectColor(shipContext,
 		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.1)),
-		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
+		glm::vec3(0.3, 0.35, 0.20), 0.2, 0.8
 	);
 
 	spotlightPos = spaceshipPos + 0.5f * spaceshipDir;
@@ -193,16 +262,54 @@ void init(GLFWwindow* window)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glEnable(GL_DEPTH_TEST);
-	program = shaderLoader.CreateProgram("shaders/shader_8_1.vert", "shaders/shader_8_1.frag");
-	programSun = shaderLoader.CreateProgram("shaders/shader_8_sun.vert", "shaders/shader_8_sun.frag");
+	program = shaderLoader.CreateProgram("shaders/shader_color.vert", "shaders/shader_color.frag");
+	programSun = shaderLoader.CreateProgram("shaders/shader_sun.vert", "shaders/shader_sun.frag");
+	programTex = shaderLoader.CreateProgram("shaders/shader_tex.vert", "shaders/shader_tex.frag");
+
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/spaceship.obj", shipContext);
+	loadModelToContext("./models/Ring.obj", station);
+	loadModelToContext("./models/planet.obj", planet);
+	loadModelToContext("./models/sun.obj", sun);
+
 
 	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
 	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
 	texture::textureMetallic = Core::LoadTexture("./textures/rustediron2_metallic.png");
 	texture::textureRoughness = Core::LoadTexture("./textures/rustediron2_roughness.png");
+
+	texture::sun = Core::LoadTexture("./textures/Planets/sun.jpg");
+	texture::planetContinentBase = Core::LoadTexture("./textures/Planets/planet_continental_Base_Color.jpg");
+	texture::planetContinentNormal = Core::LoadTexture("./textures/Planets/planet_continental_Normal_OpenGL.jpg");
+	texture::planetContinentRoughness = Core::LoadTexture("./textures/Planets/planet_continental_Roughness.jpg");
+	texture::planetContinentMetallic = Core::LoadTexture("./textures/Planets/planet_continental_Metallic.jpg");
+
+	texture::planetBarrenBase = Core::LoadTexture("./textures/Planets/planet_barren_Base_Color.jpg");
+	texture::planetBarrenNormal = Core::LoadTexture("./textures/Planets/planet_barren_Normal_OpenGL.jpg");
+	texture::planetBarrenRoughness = Core::LoadTexture("./textures/Planets/planet_barren_Roughness.jpg");
+
+	texture::planetFrozenBase = Core::LoadTexture("./textures/Planets/planet_frozen_Base_Color.jpg");
+	texture::planetFrozenNormal = Core::LoadTexture("./textures/Planets/planet_frozen_Normal_OpenGL.jpg");
+	texture::planetFrozenRoughness = Core::LoadTexture("./textures/Planets/planet_frozen_Roughness.jpg");
+
+	texture::planetGasBase = Core::LoadTexture("./textures/Planets/planet_gas_Base_Color.jpg");
+	texture::planetGasNormal = Core::LoadTexture("./textures/Planets/planet_gas_Normal_OpenGL.jpg");
+	texture::planetGasClouds = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Base_Color.jpg");
+	texture::planetGasCloudsNormal = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Normal_OpenGL.jpg");
+	texture::planetGasCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_gas_cloud_01_Opacity.jpg");
+
+	texture::planetLavaBase = Core::LoadTexture("./textures/Planets/planet_lava_Base_Color.jpg");;
+	texture::planetLavaNormal = Core::LoadTexture("./textures/Planets/planet_lava_Normal_OpenGL.jpg");
+	texture::planetLavaRoughness= Core::LoadTexture("./textures/Planets/planet_lava_Roughness.jpg");;
+
+	texture::planetSmacBase = Core::LoadTexture("./textures/Planets/planet_smac_Base_Color.jpg");;
+	texture::planetSmacNormal = Core::LoadTexture("./textures/Planets/planet_smac_Normal_OpenGL.jpg");
+	texture::planetSmacRoughness = Core::LoadTexture("./textures/Planets/planet_smac_Roughness.jpg");
+	texture::planetSmacClouds = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Base_Color.jpg");
+	texture::planetSmacCloudsNormal = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Normal_OpenGL.jpg");
+	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.jpg");
+
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
 
