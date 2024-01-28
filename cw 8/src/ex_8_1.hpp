@@ -24,6 +24,8 @@ namespace texture {
 	GLuint ship;
 	GLuint textureAlbedo; GLuint textureNormal; GLuint textureMetallic; GLuint textureRoughness; GLuint textureAO;
 
+	GLuint skybox;
+
 
 	GLuint empty;
 
@@ -74,6 +76,7 @@ namespace texture {
 GLuint program;
 GLuint programSun;
 GLuint programTex;
+GLuint programSkybox;
 Core::Shader_Loader shaderLoader;
 
 Core::RenderContext shipContext;
@@ -82,6 +85,7 @@ Core::RenderContext station;
 Core::RenderContext planet;
 Core::RenderContext sun;
 
+Core::RenderContext cubeContext;
 
 glm::vec3 cameraPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
@@ -176,6 +180,21 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 
 }
 
+void drawSkybox(glm::mat4 modelMatrix) {
+	glUseProgram(programSkybox);
+	glDisable(GL_DEPTH_TEST);
+
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(programSkybox, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture::skybox);
+	Core::DrawContext(cubeContext);
+
+	glEnable(GL_DEPTH_TEST);
+}
+
+
+
 void drawStar(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint texture)
 {
 	glUseProgram(programSun);
@@ -210,10 +229,11 @@ void drawObjectTexture(Core::RenderContext& context, glm::mat4 modelMatrix, GLui
 
 void renderScene(GLFWwindow* window)
 {
-	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 transformation;
 	float time = glfwGetTime();
+
+	drawSkybox(glm::translate(glm::mat4(1.0), spaceshipPos));
 
 
 	
@@ -235,7 +255,26 @@ void renderScene(GLFWwindow* window)
 	//drawStar(sun, glm::mat4(1.0), texture::sun);
 	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
 
-	
+	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
+		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
+		texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.07f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(26.0, 0, 0)),
+		texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.045f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(38.0, 0, 0)),
+		texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.030f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(43.0, 0, 0)),
+		texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
+		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
+	//drawStar(sun, glm::mat4(1.0), texture::sun);
+	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
+
+
+	drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
+
+#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
@@ -247,10 +286,6 @@ void renderScene(GLFWwindow* window)
 		});
 
 
-	//drawObjectColor(shipContext,
-	//	glm::translate(cameraPos + 1.5 * cameraDir + cameraUp * -0.5f) * inveseCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()),
-	//	glm::vec3(0.3, 0.3, 0.5)
-	//	);
 	drawObjectColor(shipContext,
 		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.1)),
 		glm::vec3(0.3, 0.35, 0.20), 0.2, 0.8
@@ -258,6 +293,10 @@ void renderScene(GLFWwindow* window)
 
 	spotlightPos = spaceshipPos + 0.5f * spaceshipDir;
 	spotlightConeDir = spaceshipDir;
+
+#pragma endregion
+
+	
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -287,15 +326,16 @@ void init(GLFWwindow* window)
 	glEnable(GL_DEPTH_TEST);
 	program = shaderLoader.CreateProgram("shaders/shader_color.vert", "shaders/shader_color.frag");
 	programSun = shaderLoader.CreateProgram("shaders/shader_sun.vert", "shaders/shader_sun.frag");
+	programSkybox = shaderLoader.CreateProgram("shaders/shader_skybox.vert", "shaders/shader_skybox.frag");
+
+	glGenTextures(1, &texture::skybox);
+	
 	programTex = shaderLoader.CreateProgram("shaders/shader_tex.vert", "shaders/shader_tex.frag");
 
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
+	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/spaceship.obj", shipContext);
-	loadModelToContext("./models/Ring.obj", station);
-	loadModelToContext("./models/planet.obj", planet);
-	loadModelToContext("./models/sun.obj", sun);
-
 
 	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
 	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
