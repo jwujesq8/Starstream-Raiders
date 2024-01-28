@@ -338,7 +338,6 @@ void init(GLFWwindow* window)
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
-	loadModelToContext("./models/spaceship.obj", shipContext);
 	loadModelToContext("./models/Ring.obj", station);
 	loadModelToContext("./models/planet.obj", planet);
 	std::vector<std::string> skyboxPaths = {
