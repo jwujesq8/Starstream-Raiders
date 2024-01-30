@@ -4,7 +4,7 @@
 
 using namespace glm;
 
-std::vector<glm::vec3> calculatePlayerBoundingBox(vec3 playerPosition, vec3 playerSize, vec3 playerDirection, vec3 & playerMin, vec3 & playerMax) {
+void calculatePlayerBoundingBox(vec3 playerPosition, vec3 playerSize, vec3 playerDirection, vec3 & playerMin, vec3 & playerMax) {
     // Calculate half extents of the player
     vec3 halfExtents = playerSize / 2.0f;
 
@@ -35,8 +35,6 @@ std::vector<glm::vec3> calculatePlayerBoundingBox(vec3 playerPosition, vec3 play
         playerMin = glm::min(playerMin, vertices[i]);
         playerMax = glm::max(playerMax, vertices[i]);
     }
-    std::vector<vec3> playerMinMax = { playerMin, playerMax };
-    return playerMinMax;
 }
 
 bool rayCubeCollizion(vec3 rayDirection, vec3 rayOrigin, vec3 lb, vec3 rt)

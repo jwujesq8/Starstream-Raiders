@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Alien.cpp" />
+    <ClCompile Include="src\Space_Traveler.cpp" />
     <ClCompile Include="src\Box.cpp" />
     <ClCompile Include="src\Calculations.cpp" />
     <ClCompile Include="src\Camera.cpp" />
