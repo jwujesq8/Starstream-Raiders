@@ -64,7 +64,11 @@ public:
         );
 
     };
-
+    
+    SpaceshipModel getCurrentSpaceshipModel() {
+        return *currentSpaceshipModel;
+    }
+    /*
     SpaceshipModel getNextModel() {
         if (spaceshipModelList.empty()) {
             // If the list is empty, return a default item
@@ -76,6 +80,18 @@ public:
         }
 
         return *currentSpaceshipModel++;
+    };*/
+    void setNextModel() {
+        if (spaceshipModelList.empty()) {
+            // If the list is empty????
+            throw "spaceshipModelList is empty";//{ "", "", "", "" };
+        }
+        // If currentItem is pointing to the end, reset it to the beginning
+        if (currentSpaceshipModel == spaceshipModelList.end()) {
+            currentSpaceshipModel = spaceshipModelList.begin();
+        }
+
+        *currentSpaceshipModel++;
     };
 
     void printModelsList() {

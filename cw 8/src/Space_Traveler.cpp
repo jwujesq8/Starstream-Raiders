@@ -17,7 +17,7 @@
 class SpaceTraveler {
 private:
 	int maxHp;
-	SpaceshipModel spaceshipModel;
+	SpaceshipModelList spaceshipModelList;
 	int hp;
 	int damage;
 	vec3 size;
@@ -33,9 +33,9 @@ private:
 	}
 
 public:
-	SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage,	GLuint texture,	glm::vec3 position,	glm::vec3 direction, glm::vec3 size) {
+	SpaceTraveler(int maxHp, SpaceshipModelList spaceshipModelList, int damage,	glm::vec3 position,	glm::vec3 direction, glm::vec3 size) {
 		this->maxHp = maxHp;
-		this->spaceshipModel = spaceshipModel;
+		this->spaceshipModelList = spaceshipModelList;
 		this->hp = maxHp;
 		this->damage = damage;
 		this->position = position;
@@ -48,6 +48,9 @@ public:
 	}
 	const vec3 Direction() const {
 		return direction;
+	}
+	SpaceshipModel getSpaceshipModel(){
+		return spaceshipModelList.getCurrentSpaceshipModel();
 	}
 
 	//Functions

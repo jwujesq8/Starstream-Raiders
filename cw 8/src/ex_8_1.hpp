@@ -18,6 +18,7 @@
 #include <GLFW/glfw3.h>
 #include <list>
 #include "SpaceshipModelList.h"
+#include "Space_Traveler.cpp"
 
 
 namespace texture {
@@ -113,6 +114,8 @@ float spotlightPhi = 3.14 / 3;
 
 SpaceshipModel currentSpaceship;
 SpaceshipModelList spaceshipModelList;
+
+SpaceTraveler player;
 float scaleModelIndex = 0.1;
 
 
@@ -329,8 +332,10 @@ void init(GLFWwindow* window)
 
 	
 	spaceshipModelList.fillList();
-	currentSpaceship = spaceshipModelList.getNextModel();
-	loadModelToContext(currentSpaceship.mainModelPath, shipContext);
+	//TODO LENA: replace last argument with the actual size
+	SpaceTraveler player(100, spaceshipModelList, 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
+	//currentSpaceship = spaceshipModelList.getNextModel();
+	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
 	texture::textureAlbedo = Core::LoadTexture(currentSpaceship.textureBaseColorPath.data());
 	texture::textureNormal = Core::LoadTexture(currentSpaceship.textureNormalPath.data());
 	texture::textureMetallic = Core::LoadTexture(currentSpaceship.textureMetallicPath.data());
@@ -435,7 +440,7 @@ void processInput(GLFWwindow* window)
 
 	//change the spaceships model (it's available only on the station but this bound will be added LATER !!)
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
-		currentSpaceship = spaceshipModelList.getNextModel();
+		spaceshipModelList.setNextModel();
 
 		//change scaleModelIndex
 		if (currentSpaceship.mainModelPath.find("_0") != std::string::npos){
