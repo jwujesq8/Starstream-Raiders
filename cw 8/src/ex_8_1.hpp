@@ -4,6 +4,7 @@
 #include "ext.hpp"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 #include "Shader_Loader.h"
 #include "Render_Utils.h"
@@ -96,6 +97,12 @@ glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
 
 glm::vec3 spaceshipPos = glm::vec3(0.479490f, 1.000000f, -2.124680f);
 glm::vec3 spaceshipDir = glm::vec3(-0.354510f, 0.000000f, 0.935054f);
+glm::mat4 stationPosMatrix = glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f));
+
+
+// for stable ships score
+float lastFrameTime = 0;
+float deltaTime;
 
 GLuint VAO,VBO;
 
@@ -239,6 +246,8 @@ void renderScene(GLFWwindow* window)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 transformation;
 	float time = glfwGetTime();
+	deltaTime = std::min(time - lastFrameTime, 0.1f);
+	lastFrameTime = time;
 
 	drawSkybox(glm::translate(glm::mat4(1.0), spaceshipPos));
 
@@ -248,7 +257,7 @@ void renderScene(GLFWwindow* window)
 
 	#pragma region planets
 	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
-	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(15.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)), glm::vec3(0.2), 0.3, 0.6);
+	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)) * glm::rotate(glm::mat4(1.0), 1.57f, glm::vec3(0, 0, 1)), glm::vec3(0.2), 0.3, 0.6);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
 		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
@@ -338,7 +347,7 @@ void init(GLFWwindow* window)
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
-	loadModelToContext("./models/Ring.obj", station);
+	loadModelToContext("./models/Station.obj", station);
 	loadModelToContext("./models/planet.obj", planet);
 	std::vector<std::string> skyboxPaths = {
 			"textures/skybox-right.jpg",
@@ -397,6 +406,15 @@ void shutdown(GLFWwindow* window)
 }
 
 
+bool isShipOnStation(const glm::vec3 shipPos) {
+	glm::vec3 stationPosition = glm::vec3(stationPosMatrix[3]);
+
+	float distanceEdge = 1.5f;
+	float shipStationdistance = glm::distance(shipPos, stationPosition);
+
+	return shipStationdistance < distanceEdge;
+}
+
 
 
 //obsluga wejscia
@@ -404,8 +422,8 @@ void processInput(GLFWwindow* window)
 {
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::vec3(0.f, 1.f, 0.f);
-	float angleSpeed = 0.001f;
-	float moveSpeed = 0.001f;
+	float angleSpeed = deltaTime * 0.7f;
+	float moveSpeed = deltaTime * 7.;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
@@ -434,7 +452,8 @@ void processInput(GLFWwindow* window)
 		exposition += 0.05;
 
 	//change the spaceships model (it's available only on the station but this bound will be added LATER !!)
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && isShipOnStation(spaceshipPos)) {
+		
 		currentSpaceship = spaceshipModelList.getNextModel();
 
 		//change scaleModelIndex
