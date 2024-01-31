@@ -18,7 +18,7 @@
 #include <GLFW/glfw3.h>
 #include <list>
 #include "SpaceshipModelList.h"
-#include "Space_Traveler.cpp"
+#include "Space_Traveler.h"
 
 
 namespace texture {
@@ -95,8 +95,8 @@ glm::vec3 cameraPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
 
 
-glm::vec3 spaceshipPos = glm::vec3(0.479490f, 1.000000f, -2.124680f);
-glm::vec3 spaceshipDir = glm::vec3(-0.354510f, 0.000000f, 0.935054f);
+//glm::vec3 spaceshipPos = glm::vec3(0.479490f, 1.000000f, -2.124680f);
+//glm::vec3 spaceshipDir = glm::vec3(-0.354510f, 0.000000f, 0.935054f);
 
 GLuint VAO,VBO;
 
@@ -112,10 +112,12 @@ glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
 glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*10.0f;
 float spotlightPhi = 3.14 / 3;
 
-SpaceshipModel currentSpaceship;
+
 SpaceshipModelList spaceshipModelList;
 
-SpaceTraveler player;
+SpaceTraveler player(100, spaceshipModelList, 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
+std::vector<SpaceTraveler> enemies;
+
 float scaleModelIndex = 0.1;
 
 
@@ -243,7 +245,7 @@ void renderScene(GLFWwindow* window)
 	glm::mat4 transformation;
 	float time = glfwGetTime();
 
-	drawSkybox(glm::translate(glm::mat4(1.0), spaceshipPos));
+	drawSkybox(glm::translate(glm::mat4(1.0), player.Position()));
 
 
 	
@@ -273,23 +275,23 @@ void renderScene(GLFWwindow* window)
 
 	#pragma region spaceship
 
-	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
-	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, spaceshipDir));
+	glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
+	glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, player.Direction()));
 	glm::mat4 specshipCameraRotrationMatrix = glm::mat4({
 		spaceshipSide.x,spaceshipSide.y,spaceshipSide.z,0,
 		spaceshipUp.x,spaceshipUp.y,spaceshipUp.z ,0,
-		-spaceshipDir.x,-spaceshipDir.y,-spaceshipDir.z,0,
+		-player.Direction().x,-player.Direction().y,-player.Direction().z,0,
 		0.,0.,0.,1.,
 		});
 
 
 	drawObjectColor(shipContext,
-		glm::translate(glm::mat4(1.0), spaceshipPos) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+		glm::translate(glm::mat4(1.0), player.Position()) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
 		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
 	);
 
-	spotlightPos = spaceshipPos + 0.5f * spaceshipDir;
-	spotlightConeDir = spaceshipDir;
+	spotlightPos = player.Position() + 0.5f * player.Direction();
+	spotlightConeDir = player.Direction();
 
 #pragma endregion
 
@@ -331,15 +333,14 @@ void init(GLFWwindow* window)
 
 
 	
-	spaceshipModelList.fillList();
+	//spaceshipModelList.fillList();
 	//TODO LENA: replace last argument with the actual size
-	SpaceTraveler player(100, spaceshipModelList, 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
 	//currentSpaceship = spaceshipModelList.getNextModel();
 	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
-	texture::textureAlbedo = Core::LoadTexture(currentSpaceship.textureBaseColorPath.data());
-	texture::textureNormal = Core::LoadTexture(currentSpaceship.textureNormalPath.data());
-	texture::textureMetallic = Core::LoadTexture(currentSpaceship.textureMetallicPath.data());
-	texture::textureRoughness = Core::LoadTexture(currentSpaceship.textureRoughnessPath.data());
+	texture::textureAlbedo = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureBaseColorPath.data());
+	texture::textureNormal = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureNormalPath.data());
+	texture::textureMetallic = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureMetallicPath.data());
+	texture::textureRoughness = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureRoughnessPath.data());
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
@@ -403,36 +404,38 @@ void shutdown(GLFWwindow* window)
 
 
 
-
 //obsluga wejscia
 void processInput(GLFWwindow* window)
 {
-	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
+	glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::vec3(0.f, 1.f, 0.f);
-	float angleSpeed = 0.001f;
-	float moveSpeed = 0.001f;
+	
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		spaceshipPos += spaceshipDir * moveSpeed;
+		player.forward();//spaceshipPos += player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		spaceshipPos -= spaceshipDir * moveSpeed;
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-		spaceshipPos += spaceshipSide * moveSpeed;
-	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		spaceshipPos -= spaceshipSide * moveSpeed;
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		spaceshipPos += spaceshipUp * moveSpeed;
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		spaceshipPos -= spaceshipUp * moveSpeed;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		spaceshipDir = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(spaceshipDir, 0));
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		spaceshipDir = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(spaceshipDir, 0));
+		player.backward(); //spaceshipPos -= player.Direction() * moveSpeed;
+	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	//	player.glideRight();//spaceshipPos += spaceshipSide * moveSpeed;
+	//if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+	//	player.glideLeft();//spaceshipPos -= spaceshipSide * moveSpeed;
+	//if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	//	player.up();//spaceshipPos += spaceshipUp * moveSpeed;
+	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	//	player.down();//spaceshipPos -= spaceshipUp * moveSpeed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		player.turnRight();//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		player.turnUp();//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		player.turnDown();//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
 
-	cameraPos = spaceshipPos - 1.5f * spaceshipDir + glm::vec3(0, 1, 0) * 0.5f;
-	cameraDir = spaceshipDir;
+	cameraPos = player.Position() - 1.5f * player.Direction() + glm::vec3(0, 1, 0) * 0.5f;
+	cameraDir = player.Direction();
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		exposition -= 0.05;
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
@@ -443,24 +446,28 @@ void processInput(GLFWwindow* window)
 		spaceshipModelList.setNextModel();
 
 		//change scaleModelIndex
-		if (currentSpaceship.mainModelPath.find("_0") != std::string::npos){
+		if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_0") != std::string::npos){
 			scaleModelIndex = 0.1;
 		}
-		else if (currentSpaceship.mainModelPath.find("_1") != std::string::npos) {
+		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_1") != std::string::npos) {
 			scaleModelIndex = 0.05;
 		}
-		else if (currentSpaceship.mainModelPath.find("_2") != std::string::npos) {
+		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_2") != std::string::npos) {
 			scaleModelIndex = 0.08;
 		}
-		else if (currentSpaceship.mainModelPath.find("_3") != std::string::npos) {
+		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_3") != std::string::npos) {
 			scaleModelIndex = 0.008;
 		}
 
-		loadModelToContext(currentSpaceship.mainModelPath, shipContext);
-		texture::textureAlbedo = Core::LoadTexture(currentSpaceship.textureBaseColorPath.data());
-		texture::textureNormal = Core::LoadTexture(currentSpaceship.textureNormalPath.data());
-		texture::textureMetallic = Core::LoadTexture(currentSpaceship.textureMetallicPath.data());
-		texture::textureRoughness = Core::LoadTexture(currentSpaceship.textureRoughnessPath.data());
+		loadModelToContext(spaceshipModelList.getCurrentSpaceshipModel().mainModelPath, shipContext);
+		texture::textureAlbedo = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureBaseColorPath.data());
+		texture::textureNormal = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureNormalPath.data());
+		texture::textureMetallic = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureMetallicPath.data());
+		texture::textureRoughness = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureRoughnessPath.data());
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		player.shoot(enemies);
 	}
 
 	//cameraDir = glm::normalize(-cameraPos);

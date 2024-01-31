@@ -20,6 +20,7 @@ private:
 public:
 
     SpaceshipModelList() {
+        fillList();
         currentSpaceshipModel = spaceshipModelList.begin();
     }
 
@@ -66,6 +67,10 @@ public:
     };
     
     SpaceshipModel getCurrentSpaceshipModel() {
+        if (spaceshipModelList.empty()) {
+            throw std::runtime_error("spaceshipModelList is empty");
+        }
+
         return *currentSpaceshipModel;
     }
     /*

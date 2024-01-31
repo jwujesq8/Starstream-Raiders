@@ -98,6 +98,12 @@
     <ClInclude Include="src\SpaceshipModelList.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Calculations.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Space_Traveler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_sun.vert">

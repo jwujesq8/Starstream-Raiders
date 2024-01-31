@@ -1,10 +1,12 @@
 #include <iostream>
 #include <glm.hpp>
 #include <vector>
+#include "Calculations.h"
 
 using namespace glm;
 
-void calculatePlayerBoundingBox(vec3 playerPosition, vec3 playerSize, vec3 playerDirection, vec3 & playerMin, vec3 & playerMax) {
+
+void Calculations::calculatePlayerBoundingBox(vec3 playerPosition, vec3 playerSize, vec3 playerDirection, vec3 & playerMin, vec3 & playerMax) {
     // Calculate half extents of the player
     vec3 halfExtents = playerSize / 2.0f;
 
@@ -37,7 +39,7 @@ void calculatePlayerBoundingBox(vec3 playerPosition, vec3 playerSize, vec3 playe
     }
 }
 
-bool rayCubeCollizion(vec3 rayDirection, vec3 rayOrigin, vec3 lb, vec3 rt)
+bool Calculations::rayCubeCollision(vec3 rayDirection, vec3 rayOrigin, vec3 lb, vec3 rt)
 {
     float t; //length of ray until intersection
     

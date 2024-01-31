@@ -1,69 +1,68 @@
-#include "GL/glew.h"
-#include "glm.hpp"
-#include <iostream>
-#include <cmath>
-
-#include "Shader_Loader.h"
-#include "Render_Utils.h"
-#include "Texture.h"
-
-#include <string>
+#include "Space_Traveler.h"
+#include "Calculations.h" // Include for rayCubeCollision function
+#include "SpaceshipModelList.h" // Include for SpaceshipModelList class definition
 #include <gtx/euler_angles.hpp>
-#include <GLFW/glfw3.h>
-#include <list>
-#include "Calculations.cpp"
-#include "SpaceshipModelList.h"
 
-class SpaceTraveler {
-private:
-	int maxHp;
-	SpaceshipModelList spaceshipModelList;
-	int hp;
-	int damage;
-	vec3 size;
-	glm::vec3 position;
-	glm::vec3 direction;
-	bool isAlive = true;
+SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModelList spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
+    maxHp(maxHp), spaceshipModelList(spaceshipModelList), hp(maxHp), damage(damage), position(position), direction(direction), size(size),
+    isAlive(true), speed(0.1f), angleSpeed(0.001f), moveSpeed(0.001f) {}
 
-	void getShot(int damage)
-	{
-		hp -= damage;
-		if (hp < 0)
-			isAlive = false;
-	}
+// Private member function
+void SpaceTraveler::getShot(int damage) {
+    hp -= damage;
+    if (hp < 0)
+        isAlive = false;
+}
 
-public:
-	SpaceTraveler(int maxHp, SpaceshipModelList spaceshipModelList, int damage,	glm::vec3 position,	glm::vec3 direction, glm::vec3 size) {
-		this->maxHp = maxHp;
-		this->spaceshipModelList = spaceshipModelList;
-		this->hp = maxHp;
-		this->damage = damage;
-		this->position = position;
-		this->direction = direction;
-		this->size = size;
-	}
-	//Properties
-	const vec3 Position() const{
-		return position;
-	}
-	const vec3 Direction() const {
-		return direction;
-	}
-	SpaceshipModel getSpaceshipModel(){
-		return spaceshipModelList.getCurrentSpaceshipModel();
-	}
+// Properties
+const glm::vec3 SpaceTraveler::Position() const {
+    return position;
+}
 
-	//Functions
-	void shoot(std::vector<SpaceTraveler> targets)
-	{
+const glm::vec3 SpaceTraveler::Direction() const {
+    return direction;
+}
 
-		vec3 targetsMin;
-		vec3 targetsMax;
+const glm::vec3 SpaceTraveler::Size() const {
+    return size;
+}
 
-		for (int i = 0; i < targets.size(); i++) {
-			calculatePlayerBoundingBox(position, size, direction, targetsMin, targetsMax);
-			if (rayCubeCollizion(direction, position, targetsMin, targetsMax))
-				targets[i].getShot(damage);
-		}
-	}
-};
+SpaceshipModel SpaceTraveler::getSpaceshipModel() {
+    return spaceshipModelList.getCurrentSpaceshipModel();
+}
+
+// Functions
+void SpaceTraveler::shoot(std::vector<SpaceTraveler> targets) {
+    glm::vec3 targetsMin;
+    glm::vec3 targetsMax;
+
+    for (int i = 0; i < targets.size(); i++) {
+        Calculations::calculatePlayerBoundingBox(targets[i].Position(), targets[i].Size(), targets[i].Direction(), targetsMin, targetsMax);
+        if (Calculations::rayCubeCollision(direction, position, targetsMin, targetsMax))
+            targets[i].getShot(damage);
+    }
+}
+
+void SpaceTraveler::forward() {
+    position += direction * moveSpeed;
+}
+
+void SpaceTraveler::backward() {
+    position -= direction * moveSpeed;
+}
+
+void SpaceTraveler::turnLeft() {
+    direction = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(direction, 0));
+}
+
+void SpaceTraveler::turnRight() {
+    direction = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(direction, 0));
+}
+
+void SpaceTraveler::turnUp() {
+    direction = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(direction, 0));
+}
+
+void SpaceTraveler::turnDown() {
+    direction = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(direction, 0));
+}
