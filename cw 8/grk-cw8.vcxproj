@@ -40,8 +40,11 @@
     <ClInclude Include="src\SpaceshipModelList.h" />
     <ClInclude Include="src\Space_Traveler.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\shader_laser.frag" />
+    <None Include="shaders\shader_laser.vert" />
     <None Include="shaders\shader_tex.frag" />
     <None Include="shaders\shader_tex.vert" />
     <None Include="shaders\shader_color.frag" />
@@ -83,13 +86,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(SolutionDir)/External resourses/freeglut/lib/$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)/External resourses/freeglut/include/GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)dependencies\glew-2.0.0\lib\Release\Win32;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\lib-vc2019;$(SolutionDir)dependencies\assimp;$(SolutionDir)/External resourses/freeglut/lib/$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)/External resourses/freeglut/include/GL;$(SolutionDir)dependencies\glew-2.0.0\include\GL;$(SolutionDir)dependencies\glm;$(SolutionDir)dependencies\glfw-3.3.8.bin.WIN32\include;$(SolutionDir)dependencies\assimp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>

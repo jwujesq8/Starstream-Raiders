@@ -21,6 +21,8 @@ private:
     float speed;
     float angleSpeed = 0.001f;
     float moveSpeed = 0.001f;
+    float lastTimeShot = 0.0f;
+    float cooldown = 1.5f;
 
     void getShot(int damage);
 
@@ -31,6 +33,8 @@ public:
     const glm::vec3 Position() const;
     const glm::vec3 Direction() const;
     const glm::vec3 Size() const;
+    const float LastTimeShot() const;
+    const float Cooldown() const;
     bool IsAlive();
     SpaceshipModel getSpaceshipModel();
     void setSpaceshipModel(SpaceshipModel spaceshipModel);

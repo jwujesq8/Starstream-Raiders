@@ -2,6 +2,7 @@
 #include "Calculations.h" // Include for rayCubeCollision function
 #include "SpaceshipModelList.h" // Include for SpaceshipModelList class definition
 #include <gtx/euler_angles.hpp>
+#include <GLFW/glfw3.h>
 
 SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
     maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size),
@@ -27,6 +28,15 @@ const glm::vec3 SpaceTraveler::Size() const {
     return size;
 }
 
+const float SpaceTraveler::LastTimeShot() const {
+	return lastTimeShot;
+}
+
+const float SpaceTraveler::Cooldown() const
+{
+    return cooldown;
+}
+
 SpaceshipModel SpaceTraveler::getSpaceshipModel() {
     return spaceshipModel;
 }
@@ -40,8 +50,11 @@ bool SpaceTraveler::IsAlive() {
 
 // Functions
 void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
+    std::cout << "BAM" << std::endl;
     glm::vec3 targetsMin;
     glm::vec3 targetsMax;
+
+    lastTimeShot = glfwGetTime();
 
     for (int i = 0; i < targets.size(); i++) {
         Calculations::calculatePlayerBoundingBox(targets[i].Position(), targets[i].Size(), targets[i].Direction(), targetsMin, targetsMax);
@@ -49,6 +62,7 @@ void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
             targets[i].getShot(damage);
     }
 }
+
 
 void SpaceTraveler::forward() {
     position += direction * moveSpeed;
