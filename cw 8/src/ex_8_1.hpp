@@ -34,7 +34,6 @@ namespace texture {
 	GLuint empty;
 
 	GLuint earthNormal;
-	GLuint asteroidNormal;
 	GLuint shipNormal;
 
 	GLuint planetContinentBase;
@@ -72,6 +71,16 @@ namespace texture {
 
 	GLuint sun;
 
+	GLuint asteroidBaseColor_0;
+
+	GLuint asteroidBaseColor_2;
+	GLuint asteroidMetallic_2;
+	GLuint asteroidNormal_2;
+	GLuint asteroidRoughness_2;
+
+	GLuint asteroidBaseColor_3;
+	GLuint asteroidMetallic_3;
+	GLuint asteroidNormal_3;
 
 
 }
@@ -88,6 +97,9 @@ Core::RenderContext sphereContext;
 Core::RenderContext station;
 Core::RenderContext planet;
 Core::RenderContext sun;
+Core::RenderContext asteroidContext_0;
+Core::RenderContext asteroidContext_2;
+Core::RenderContext asteroidContext_3;
 
 Core::RenderContext cubeContext;
 
@@ -262,14 +274,27 @@ void renderScene(GLFWwindow* window)
 		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
 		texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty);
+	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.3f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(13.0, 2., 0)) *
+		glm::scale(glm::mat4(1.0), glm::vec3(0.0002f)),
+		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.07f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(26.0, 0, 0)),
 		texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty);
+	drawObjectTexture(asteroidContext_0, glm::rotate(glm::mat4(1.0), time * 0.0813f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(33.0, 0, 0)),
+		texture::asteroidBaseColor_0, texture::empty, texture::empty, texture::empty);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.045f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(38.0, 0, 0)),
 		texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty);
 	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.030f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(43.0, 0, 0)),
 		texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
+	drawObjectTexture(asteroidContext_3, glm::rotate(glm::mat4(1.0), time * 0.13f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
+		texture::asteroidBaseColor_3, texture::asteroidNormal_3, texture::empty, texture::asteroidMetallic_3);
+	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(53.0, 0, 0)),
 		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
+	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.17f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(57., -0.5, 0)) *
+		glm::scale(glm::mat4(1.0), glm::vec3(0.001f)),
+		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
+	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.03f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(64., 0.5, 0)) *
+		glm::scale(glm::mat4(1.0), glm::vec3(0.011f)),
+		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
 	//drawStar(sun, glm::mat4(1.0), texture::sun);
 	
 
@@ -277,6 +302,8 @@ void renderScene(GLFWwindow* window)
 	//drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
 #pragma endregion
 
+	//Core::RenderContext& context, glm::mat4 modelMatrix,
+	// GLuint textureID, GLuint normal, GLuint roughness, GLuint metallic
 	#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(spaceshipDir, glm::vec3(0.f, 1.f, 0.f)));
@@ -349,6 +376,9 @@ void init(GLFWwindow* window)
 	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/Station.obj", station);
 	loadModelToContext("./models/planet.obj", planet);
+	loadModelToContext("./models/asteroids/0/asteroid_0.obj", asteroidContext_0);
+	loadModelToContext("./models/asteroids/2/asteroid_2.obj", asteroidContext_2);
+	loadModelToContext("./models/asteroids/3/asteroid_3.obj", asteroidContext_3);
 	std::vector<std::string> skyboxPaths = {
 			"textures/skybox-right.jpg",
 			"textures/skybox-left.jpg",
@@ -394,6 +424,16 @@ void init(GLFWwindow* window)
 	texture::planetSmacClouds = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Base_Color.jpg");
 	texture::planetSmacCloudsNormal = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Normal_OpenGL.png");
 	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.png");
+	
+	texture::asteroidBaseColor_0 = Core::LoadTexture("./models/asteroids/0/textures/Lunar_Target.png");
+	texture::asteroidBaseColor_2 = Core::LoadTexture("./models/asteroids/2/textures/asteroid_low_1_BaseColor.png");
+	texture::asteroidMetallic_2 = Core::LoadTexture("./models/asteroids/2/textures/asteroid_low_1_Metallic.png");
+	texture::asteroidNormal_2 = Core::LoadTexture("./models/asteroids/2/textures/asteroid_low_1_Normal.png");
+	texture::asteroidRoughness_2 = Core::LoadTexture("./models/asteroids/2/textures/asteroid_low_1_Roughness.png");
+	
+	texture::asteroidBaseColor_3 = Core::LoadTexture("./models/asteroids/3/textures/Displacement.png");
+	texture::asteroidMetallic_3 = Core::LoadTexture("./models/asteroids/3/textures/Metalness.png");
+	texture::asteroidNormal_3 = Core::LoadTexture("./models/asteroids/3/textures/Normal.png");
 	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
