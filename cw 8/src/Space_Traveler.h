@@ -11,7 +11,7 @@
 class SpaceTraveler {
 private:
     int maxHp;
-    SpaceshipModelList spaceshipModelList;
+    SpaceshipModel spaceshipModel;
     int hp;
     int damage;
     glm::vec3 size;
@@ -25,16 +25,18 @@ private:
     void getShot(int damage);
 
 public:
-    SpaceTraveler(int maxHp, SpaceshipModelList spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size);
+    SpaceTraveler(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size);
 
     // Properties
     const glm::vec3 Position() const;
     const glm::vec3 Direction() const;
     const glm::vec3 Size() const;
+    bool IsAlive();
     SpaceshipModel getSpaceshipModel();
-
+    void setSpaceshipModel(SpaceshipModel spaceshipModel);
+    
     // Functions
-    void shoot(std::vector<SpaceTraveler> targets);
+    void shoot(std::vector<SpaceTraveler>& targets);
     void forward();
     void backward();
     void turnLeft();

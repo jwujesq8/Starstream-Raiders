@@ -3,14 +3,14 @@
 #include "SpaceshipModelList.h" // Include for SpaceshipModelList class definition
 #include <gtx/euler_angles.hpp>
 
-SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModelList spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
-    maxHp(maxHp), spaceshipModelList(spaceshipModelList), hp(maxHp), damage(damage), position(position), direction(direction), size(size),
+SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
+    maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size),
     isAlive(true), speed(0.1f), angleSpeed(0.001f), moveSpeed(0.001f) {}
 
 // Private member function
 void SpaceTraveler::getShot(int damage) {
     hp -= damage;
-    if (hp < 0)
+    if (hp <= 0)
         isAlive = false;
 }
 
@@ -28,11 +28,18 @@ const glm::vec3 SpaceTraveler::Size() const {
 }
 
 SpaceshipModel SpaceTraveler::getSpaceshipModel() {
-    return spaceshipModelList.getCurrentSpaceshipModel();
+    return spaceshipModel;
+}
+void SpaceTraveler::setSpaceshipModel(SpaceshipModel spaceshipModel) {
+	this->spaceshipModel = spaceshipModel;
+}
+
+bool SpaceTraveler::IsAlive() {
+	return isAlive;
 }
 
 // Functions
-void SpaceTraveler::shoot(std::vector<SpaceTraveler> targets) {
+void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
     glm::vec3 targetsMin;
     glm::vec3 targetsMax;
 

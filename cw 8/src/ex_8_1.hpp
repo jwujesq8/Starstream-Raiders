@@ -26,7 +26,7 @@ namespace texture {
 	GLuint clouds;
 	GLuint moon;
 	GLuint ship;
-	GLuint textureAlbedo; GLuint textureNormal; GLuint textureMetallic; GLuint textureRoughness; GLuint textureAO;
+	GLuint spaceshipAlbedo; GLuint spaceshipNormal; GLuint spaceshipMetallic; GLuint spaceshipRoughness;
 
 	GLuint skybox;
 
@@ -72,6 +72,7 @@ namespace texture {
 
 	GLuint sun;
 
+	std::vector<GLuint> enemyTextures; std::vector<GLuint> enemyNormals; std::vector<GLuint> enemyRoughnesses; std::vector<GLuint> enemyMetallics;
 
 
 }
@@ -84,6 +85,8 @@ GLuint programSkybox;
 Core::Shader_Loader shaderLoader;
 
 Core::RenderContext shipContext;
+std::vector<Core::RenderContext> enemyContexts;
+
 Core::RenderContext sphereContext;
 Core::RenderContext station;
 Core::RenderContext planet;
@@ -113,9 +116,9 @@ glm::vec3 spotlightColor = glm::vec3(0.5, 0.9, 0.8)*10.0f;
 float spotlightPhi = 3.14 / 3;
 
 
-SpaceshipModelList spaceshipModelList;
+SpaceshipModelList spaceshipModels;
 
-SpaceTraveler player(100, spaceshipModelList, 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
+SpaceTraveler player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
 std::vector<SpaceTraveler> enemies;
 
 float scaleModelIndex = 0.1;
@@ -179,10 +182,10 @@ void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::v
 
 
 
-	Core::SetActiveTexture(texture::textureAlbedo, "textureAlbedo", program, 0);
+	/*Core::SetActiveTexture(texture::textureAlbedo, "textureAlbedo", program, 0);
 	Core::SetActiveTexture(texture::textureNormal, "textureNormal", program, 1);
 	Core::SetActiveTexture(texture::textureMetallic, "textureMetallic", program, 2);
-	Core::SetActiveTexture(texture::textureRoughness, "textureRoughness", program, 3);
+	Core::SetActiveTexture(texture::textureRoughness, "textureRoughness", program, 3);*/
 	//Core::SetActiveTexture(texture::textureAO, "textureAO", program, 4);
 
 
@@ -272,7 +275,18 @@ void renderScene(GLFWwindow* window)
 
 	//drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
 #pragma endregion
-
+#pragma enemies
+	for (int i = 0; i < enemies.size(); i++) {
+		//enemy.move();
+		SpaceTraveler enemy = enemies[i];
+		if (enemy.IsAlive()) {
+		drawObjectTexture(enemyContexts[i],
+			glm::translate(glm::mat4(1.0), enemy.Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+			texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]
+		);
+		}
+	}
+#pragma endregion
 	#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
@@ -285,9 +299,9 @@ void renderScene(GLFWwindow* window)
 		});
 
 
-	drawObjectColor(shipContext,
-		glm::translate(glm::mat4(1.0), player.Position()) * specshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
-		glm::vec3(0.3, 0.3, 0.5), 0.2, 0.8
+	drawObjectTexture(shipContext,
+		glm::translate(glm::mat4(1.0), player.Position()) * specshipCameraRotrationMatrix * glm::eulerAngleXY(glm::pi<float>(), glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+		texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
 	);
 
 	spotlightPos = player.Position() + 0.5f * player.Direction();
@@ -321,6 +335,10 @@ void loadModelToContext(std::string path, Core::RenderContext& context)
 void init(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	enemies = {
+		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[1], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[2], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+	};
 
 	glEnable(GL_DEPTH_TEST);
 	program = shaderLoader.CreateProgram("shaders/shader_color.vert", "shaders/shader_color.frag");
@@ -337,15 +355,25 @@ void init(GLFWwindow* window)
 	//TODO LENA: replace last argument with the actual size
 	//currentSpaceship = spaceshipModelList.getNextModel();
 	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
-	texture::textureAlbedo = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureBaseColorPath.data());
-	texture::textureNormal = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureNormalPath.data());
-	texture::textureMetallic = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureMetallicPath.data());
-	texture::textureRoughness = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureRoughnessPath.data());
+	texture::spaceshipAlbedo = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureBaseColorPath.data());
+	texture::spaceshipNormal = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureNormalPath.data());
+	texture::spaceshipMetallic = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureMetallicPath.data());
+	texture::spaceshipRoughness = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureRoughnessPath.data());
 
 	loadModelToContext("./models/sphere.obj", sphereContext);
 	loadModelToContext("./models/cube.obj", cubeContext);
 	loadModelToContext("./models/Ring.obj", station);
 	loadModelToContext("./models/planet.obj", planet);
+	for (int i = 0; i < enemies.size(); i++) {
+		Core::RenderContext enemyContext;
+		loadModelToContext(enemies[i].getSpaceshipModel().mainModelPath, enemyContext);
+		enemyContexts.push_back(enemyContext);
+
+		texture::enemyTextures.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureBaseColorPath.data()));
+		texture::enemyNormals.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureNormalPath.data()));
+		texture::enemyRoughnesses.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureRoughnessPath.data()));
+		texture::enemyMetallics.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureMetallicPath.data()));
+	}
 	std::vector<std::string> skyboxPaths = {
 			"textures/skybox-right.jpg",
 			"textures/skybox-left.jpg",
@@ -356,10 +384,6 @@ void init(GLFWwindow* window)
 	};
 	texture::skybox = Core::LoadSkybox(skyboxPaths);
 
-	texture::textureAlbedo = Core::LoadTexture("./textures/rustediron2_basecolor.png");
-	texture::textureNormal = Core::LoadTexture("./textures/rustediron2_normal.png");
-	texture::textureMetallic = Core::LoadTexture("./textures/rustediron2_metallic.png");
-	texture::textureRoughness = Core::LoadTexture("./textures/rustediron2_roughness.png");
 
 	texture::sun = Core::LoadTexture("./textures/Planets/sun.jpg");
 	texture::planetContinentBase = Core::LoadTexture("./textures/Planets/planet_continental_Base_Color.jpg");
@@ -393,7 +417,6 @@ void init(GLFWwindow* window)
 	texture::planetSmacCloudsOpacity = Core::LoadTexture("./textures/Planets/planet_smac_clouds_Opacity.png");
 	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
-
 
 }
 
@@ -443,27 +466,30 @@ void processInput(GLFWwindow* window)
 
 	//change the spaceships model (it's available only on the station but this bound will be added LATER !!)
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
-		spaceshipModelList.setNextModel();
+		spaceshipModels.setNextModel();
 
 		//change scaleModelIndex
-		if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_0") != std::string::npos){
+		if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_0") != std::string::npos){
 			scaleModelIndex = 0.1;
 		}
-		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_1") != std::string::npos) {
+		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_1") != std::string::npos) {
 			scaleModelIndex = 0.05;
 		}
-		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_2") != std::string::npos) {
+		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_2") != std::string::npos) {
 			scaleModelIndex = 0.08;
 		}
-		else if (spaceshipModelList.getCurrentSpaceshipModel().mainModelPath.find("_3") != std::string::npos) {
+		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_3") != std::string::npos) {
 			scaleModelIndex = 0.008;
 		}
 
-		loadModelToContext(spaceshipModelList.getCurrentSpaceshipModel().mainModelPath, shipContext);
-		texture::textureAlbedo = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureBaseColorPath.data());
-		texture::textureNormal = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureNormalPath.data());
-		texture::textureMetallic = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureMetallicPath.data());
-		texture::textureRoughness = Core::LoadTexture(spaceshipModelList.getCurrentSpaceshipModel().textureRoughnessPath.data());
+		loadModelToContext(spaceshipModels.getCurrentSpaceshipModel().mainModelPath, shipContext);
+		for (int i = 0; i < enemies.size(); i++) {
+			
+		}
+		texture::spaceshipAlbedo = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureBaseColorPath.data());
+		texture::spaceshipNormal = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureNormalPath.data());
+		texture::spaceshipMetallic = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureMetallicPath.data());
+		texture::spaceshipRoughness = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureRoughnessPath.data());
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
