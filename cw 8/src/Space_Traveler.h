@@ -41,12 +41,12 @@ public:
     
     // Functions
     void shoot(std::vector<SpaceTraveler>& targets);
-    void forward();
-    void backward();
-    void turnLeft();
-    void turnRight();
-    void turnUp();
-    void turnDown();
+    void forward(float moveSpeed, bool doubleSpeed);
+    void backward(float moveSpeed, bool doubleSpeed);
+    void turnLeft(float angleSpeed);
+    void turnRight(float angleSpeed);
+    void turnUp(float angleSpeed);
+    void turnDown(float angleSpeed);
 };
 
 #endif // SPACE_TRAVELER_H

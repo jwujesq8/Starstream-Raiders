@@ -64,26 +64,28 @@ void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
 }
 
 
-void SpaceTraveler::forward() {
+void SpaceTraveler::forward(float moveSpeed, bool doubleSpeed) {
+    if (doubleSpeed) moveSpeed = moveSpeed * 2.7;
     position += direction * moveSpeed;
 }
 
-void SpaceTraveler::backward() {
+void SpaceTraveler::backward(float moveSpeed, bool doubleSpeed) {
+    if (doubleSpeed) moveSpeed = moveSpeed * 2.7;
     position -= direction * moveSpeed;
 }
 
-void SpaceTraveler::turnLeft() {
+void SpaceTraveler::turnLeft(float angleSpeed) {
     direction = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(direction, 0));
 }
 
-void SpaceTraveler::turnRight() {
+void SpaceTraveler::turnRight(float angleSpeed) {
     direction = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(direction, 0));
 }
 
-void SpaceTraveler::turnUp() {
+void SpaceTraveler::turnUp(float angleSpeed) {
     direction = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(direction, 0));
 }
 
-void SpaceTraveler::turnDown() {
+void SpaceTraveler::turnDown(float angleSpeed) {
     direction = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(direction, 0));
 }

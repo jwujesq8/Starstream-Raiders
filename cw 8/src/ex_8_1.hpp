@@ -143,6 +143,7 @@ SpaceTraveler player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::v
 std::vector<SpaceTraveler> enemies;
 
 float scaleModelIndex = 0.1;
+glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
 
 
@@ -350,7 +351,7 @@ void renderScene(GLFWwindow* window)
 		glm::scale(glm::mat4(1.0), glm::vec3(0.001f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
 	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.03f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(64., 0.5, 0)) *
-		glm::scale(glm::mat4(1.0), glm::vec3(0.011f)),
+		glm::scale(glm::mat4(1.0), glm::vec3(0.0014f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
 	//drawStar(sun, glm::mat4(1.0), texture::sun);
 	
@@ -365,7 +366,7 @@ void renderScene(GLFWwindow* window)
 		SpaceTraveler enemy = enemies[i];
 		if (enemy.IsAlive()) {
 			drawObjectTexture(enemyContexts[i],
-				glm::translate(glm::mat4(1.0), enemy.Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+				glm::translate(glm::mat4(1.0), enemy.Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.033)),
 				texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]
 			);
 			
@@ -386,7 +387,8 @@ void renderScene(GLFWwindow* window)
 
 
 	drawObjectTexture(shipContext,
-		glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+		glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0) * 
+			glm::translate(glm::mat4(1.0), translateModelVec), glm::vec3(scaleModelIndex)),
 		texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
 	);
 	//glm::mat4 shipRotationMatrix = glm::lookAt(player.Position(), player.Position() + player.Direction(), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -545,22 +547,19 @@ bool isShipOnStation(const glm::vec3 shipPos) {
 	return shipStationdistance < distanceEdge;
 }
 
-
-
-//obsluga wejscia
 void processInput(GLFWwindow* window)
 {
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
 	glm::vec3 spaceshipUp = glm::vec3(0.f, 1.f, 0.f);
-	float angleSpeed = deltaTime * 0.7f;
-	float moveSpeed = deltaTime * 7.;
+	float angleSpeed = deltaTime * 0.44f;
+	float moveSpeed = deltaTime * 4.;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		player.forward();//spaceshipPos += player.Direction() * moveSpeed;
+		player.forward(moveSpeed, glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		player.backward(); //spaceshipPos -= player.Direction() * moveSpeed;
+		player.backward(moveSpeed, glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
 	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 	//	player.glideRight();//spaceshipPos += spaceshipSide * moveSpeed;
 	//if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
@@ -570,13 +569,13 @@ void processInput(GLFWwindow* window)
 	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	//	player.down();//spaceshipPos -= spaceshipUp * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnLeft(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		player.turnRight();//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnRight(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		player.turnUp();//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnUp(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		player.turnDown();//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnDown(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
 
 	cameraPos = player.Position() - 1.5f * player.Direction() + glm::vec3(0, 1, 0) * 0.5f;
 	cameraDir = player.Direction();
@@ -585,23 +584,26 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 		exposition += 0.05;
 
-	//change the spaceships model (it's available only on the station but this bound will be added LATER !!)
+	//change the spaceships model (it's available only on the station)
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && isShipOnStation(player.Position())) {
 		
 		spaceshipModels.setNextModel();
 
-		//change scaleModelIndex
 		if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_0") != std::string::npos){
 			scaleModelIndex = 0.1;
+			translateModelVec = glm::vec3(0, 0, 0);
 		}
 		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_1") != std::string::npos) {
-			scaleModelIndex = 0.05;
+			scaleModelIndex = 0.04;
+			translateModelVec = glm::vec3(0, -0.11, 0);
 		}
 		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_2") != std::string::npos) {
-			scaleModelIndex = 0.08;
+			scaleModelIndex = 0.07;
+			translateModelVec = glm::vec3(0, -0.205, 0);
 		}
 		else if (spaceshipModels.getCurrentSpaceshipModel().mainModelPath.find("_3") != std::string::npos) {
-			scaleModelIndex = 0.008;
+			scaleModelIndex = 0.0063;
+			translateModelVec = glm::vec3(0, -0.295, 0);
 		}
 
 		loadModelToContext(spaceshipModels.getCurrentSpaceshipModel().mainModelPath, shipContext);
@@ -623,7 +625,6 @@ void processInput(GLFWwindow* window)
 
 }
 
-// funkcja jest glowna petla
 void renderLoop(GLFWwindow* window) {
 	while (!glfwWindowShouldClose(window))
 	{
