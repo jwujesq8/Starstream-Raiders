@@ -51,6 +51,12 @@
     <ClCompile Include="src\SOIL\image_helper.c">
       <Filter>Source Files\SOIL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Space_Traveler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Calculations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\objload.h">
@@ -92,6 +98,15 @@
     <ClInclude Include="src\SpaceshipModelList.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Calculations.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Space_Traveler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_sun.vert">
@@ -116,6 +131,12 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="shaders\shader_skybox.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_laser.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_laser.frag">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

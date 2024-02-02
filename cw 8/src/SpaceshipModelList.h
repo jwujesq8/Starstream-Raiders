@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include <iostream>
+#include <vector>
 
 struct SpaceshipModel {
     std::string mainModelPath;
@@ -14,14 +15,40 @@ struct SpaceshipModel {
 
 class SpaceshipModelList {
 private:
-    std::list<SpaceshipModel> spaceshipModelList;
-    std::list<SpaceshipModel>::iterator currentSpaceshipModel;
+    std::vector<SpaceshipModel> spaceshipModelList = {
+        SpaceshipModel{"./models/spaceshipModels/0/spaceship_0.obj",
+            "./models/spaceshipModels/0/textures/rustediron2_basecolor.png",
+            "./models/spaceshipModels/0/textures/rustediron2_normal.png",
+            "./models/spaceshipModels/0/textures/rustediron2_metallic.png",
+            "./models/spaceshipModels/0/textures/rustediron2_roughness.png"},
+        SpaceshipModel{"./models/spaceshipModels/1/spaceship_1.obj",
+            "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[AlbedoM].png",
+            "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[Normal].png",
+            "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[Metalness].png",
+            "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[Roughness].png"},
+        SpaceshipModel{"./models/spaceshipModels/2/spaceship_2.obj",
+            "./models/spaceshipModels/2/textures/Material.001_Base_color.png",
+            "./models/spaceshipModels/2/textures/Material.001_Normal_DirectX.png",
+            "./models/spaceshipModels/2/textures/Material.001_Metallic.png",
+            "./models/spaceshipModels/2/textures/Material.001_Roughness.png"},
+        SpaceshipModel{"./models/spaceshipModels/3/spaceship_3.obj",
+            "./models/spaceshipModels/3/textures/paint_texture_glow1.png",
+            "./models/spaceshipModels/3/textures/paint_texture_normal.png",
+            "./models/spaceshipModels/3/textures/paint_texture_diffuse.png",
+            "./models/spaceshipModels/3/textures/Material.001_Roughness.png"}
+    };
+    SpaceshipModel currentSpaceshipModel;
+    int currentSpaceshipModelIndex = 0;
 
 public:
 
     SpaceshipModelList() {
-        currentSpaceshipModel = spaceshipModelList.begin();
+        //fillList();
+        currentSpaceshipModel = spaceshipModelList[0];
     }
+    std::vector<SpaceshipModel> getSpaceshipModelList() {
+		return spaceshipModelList;
+	}
 
     void addModel(const std::string& mainModelPath, const std::string& textureBaseColorPath, const std::string& textureNormalPath,
         const std::string& textureMetallicPath, const std::string& textureRoughnessPath)
@@ -35,7 +62,7 @@ public:
         spaceshipModelList.push_back(newModel);
     };
 
-    void fillList()
+    /*void fillList()
     {
 
         addModel("./models/spaceshipModels/0/spaceship_0.obj",
@@ -63,8 +90,17 @@ public:
             "./models/spaceshipModels/3/textures/Material.001_Roughness.png"
         );
 
-    };
+    };*/
+    
+    SpaceshipModel getCurrentSpaceshipModel() {
+        if (spaceshipModelList.empty()) {
+            throw std::runtime_error("spaceshipModelList is empty");
+        }
 
+        //return *currentSpaceshipModel;
+        return currentSpaceshipModel;
+    }
+    /*
     SpaceshipModel getNextModel() {
         if (spaceshipModelList.empty()) {
             // If the list is empty, return a default item
@@ -76,6 +112,21 @@ public:
         }
 
         return *currentSpaceshipModel++;
+    };*/
+    void setNextModel() {
+        if (spaceshipModelList.empty()) {
+            // If the list is empty????
+            throw std::runtime_error("spaceshipModelList is empty");//{ "", "", "", "" };
+        }
+        // If currentItem is pointing to the end, reset it to the beginning
+        if (currentSpaceshipModelIndex == spaceshipModelList.size() - 1) {
+            currentSpaceshipModelIndex = 0;
+            currentSpaceshipModel = spaceshipModelList[0];
+            return;
+        }
+        currentSpaceshipModelIndex++;
+        currentSpaceshipModel = spaceshipModelList[currentSpaceshipModelIndex];
+        return;
     };
 
     void printModelsList() {
