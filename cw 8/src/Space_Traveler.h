@@ -19,8 +19,8 @@ private:
     glm::vec3 direction;
     bool isAlive;
     float speed;
-    float angleSpeed = 0.001f;
-    float moveSpeed = 0.001f;
+    float angleSpeed = 0.005f;
+    float moveSpeed = 0.1f;
     float lastTimeShot = 0.0f;
     float cooldown = 1.5f;
 
@@ -41,12 +41,12 @@ public:
     
     // Functions
     void shoot(std::vector<SpaceTraveler>& targets);
-    void forward(float moveSpeed, bool doubleSpeed);
-    void backward(float moveSpeed, bool doubleSpeed);
-    void turnLeft(float angleSpeed);
-    void turnRight(float angleSpeed);
-    void turnUp(float angleSpeed);
-    void turnDown(float angleSpeed);
+    void forward(bool doubleSpeed);
+    void backward(bool doubleSpeed);
+    void turnLeft();
+    void turnRight();
+    void turnUp();
+    void turnDown();
 };
 
 #endif // SPACE_TRAVELER_H

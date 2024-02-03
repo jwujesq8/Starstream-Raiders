@@ -22,6 +22,7 @@
 #include "Space_Traveler.h"
 #include "Timer.h"
 #include <gtx/vector_angle.hpp>
+#include "Player.h"
 
 
 namespace texture {
@@ -139,7 +140,7 @@ float spotlightPhi = 3.14 / 3;
 
 SpaceshipModelList spaceshipModels;
 
-SpaceTraveler player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0));
+Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
 std::vector<SpaceTraveler> enemies;
 
 float scaleModelIndex = 0.1;
@@ -557,9 +558,9 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		player.forward(moveSpeed, glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
+		player.forward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		player.backward(moveSpeed, glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
+		player.backward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
 	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 	//	player.glideRight();//spaceshipPos += spaceshipSide * moveSpeed;
 	//if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
@@ -569,13 +570,15 @@ void processInput(GLFWwindow* window)
 	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	//	player.down();//spaceshipPos -= spaceshipUp * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		player.turnLeft(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		player.turnRight(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnRight();//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		player.turnUp(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnUp();//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		player.turnDown(angleSpeed);//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnDown();//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && isShipOnStation(player.Position()))
+		player.charge();
 
 	cameraPos = player.Position() - 1.5f * player.Direction() + glm::vec3(0, 1, 0) * 0.5f;
 	cameraDir = player.Direction();
