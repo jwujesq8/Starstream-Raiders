@@ -23,7 +23,8 @@
 #include "Timer.h"
 #include <gtx/vector_angle.hpp>
 #include "Player.h"
-
+#include <ft2build.h>
+#include FT_FREETYPE_H  
 
 namespace texture {
 	GLuint earth;
