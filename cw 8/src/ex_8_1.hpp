@@ -149,7 +149,6 @@ glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
 
 
-
 glm::mat4 createCameraMatrix()
 {
 	glm::vec3 cameraSide = glm::normalize(glm::cross(cameraDir,glm::vec3(0.f,1.f,0.f)));
@@ -532,6 +531,8 @@ void init(GLFWwindow* window)
 	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
+	
+	
 }
 
 void shutdown(GLFWwindow* window)
