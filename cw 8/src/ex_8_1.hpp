@@ -25,6 +25,10 @@
 #include "Player.h"
 #include <ft2build.h>
 #include "Characters.h"
+
+
+
+
 #include FT_FREETYPE_H  
 
 namespace texture {
@@ -149,6 +153,10 @@ std::vector<SpaceTraveler> enemies;
 float scaleModelIndex = 0.1;
 glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
+
+unsigned int VAOtext, VBOtext;
+glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+
 
 
 glm::mat4 createCameraMatrix()
@@ -314,26 +322,11 @@ void drawLaser(SpaceTraveler entity) {
 
 void drawText(std::string text, glm::vec3 color, float x, float y, float scale)
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-
-
-	unsigned int VAO, VBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
 	glUseProgram(programText);
 	glUniform3f(glGetUniformLocation(programText, "textColor"), color.x, color.y, color.z);
+	glUniformMatrix4fv(glGetUniformLocation(programText, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(VAO);
+	glBindVertexArray(VAOtext);
 
 	// iterate through all characters
 	std::string::const_iterator c;
@@ -359,7 +352,7 @@ void drawText(std::string text, glm::vec3 color, float x, float y, float scale)
 		// render glyph texture over quad
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		// update content of VBO memory
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBOtext);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		// render quad
@@ -467,9 +460,9 @@ void renderScene(GLFWwindow* window)
 	spotlightConeDir = player.Direction();
 
 #pragma endregion
-
-	drawText("This is sample text", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 25.0f, 1.0f);
 	
+	drawText(std::to_string(player.BatteryLeft()), glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+
 
 	glUseProgram(0);
 	glfwSwapBuffers(window);
@@ -593,6 +586,21 @@ void init(GLFWwindow* window)
 	texture::asteroidNormal_3 = Core::LoadTexture("./models/asteroids/3/textures/Normal.png");
 	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
+
+#pragma region text
+	glGenVertexArrays(1, &VAOtext);
+	glGenBuffers(1, &VBOtext);
+	glBindVertexArray(VAOtext);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtext);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#pragma endregion
 
 	
 	

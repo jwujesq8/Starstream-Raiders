@@ -5,8 +5,7 @@
 #include <GLFW/glfw3.h>
 
 SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
-    maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size),
-    isAlive(true), speed(0.1f), angleSpeed(0.001f), moveSpeed(0.001f) {}
+    maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size), isAlive(true) {}
 
 // Private member function
 void SpaceTraveler::getShot(int damage) {

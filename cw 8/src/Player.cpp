@@ -6,7 +6,7 @@ Player::Player(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::ve
 	this->batteryLeft = batteryCapacity;
 }
 
-const float Player::BatteryLeft() const
+float Player::BatteryLeft() const
 {
 	return batteryLeft;
 }

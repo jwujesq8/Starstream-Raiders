@@ -20,7 +20,7 @@ private:
     bool isAlive;
     float speed;
     float angleSpeed = 0.005f;
-    float moveSpeed = 0.1f;
+    float moveSpeed = 0.01;
     float lastTimeShot = 0.0f;
     float cooldown = 1.5f;
 

@@ -40,9 +40,10 @@ void generateCharacters() {
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         return;
     }
-    if (FT_New_Face(ft, "External Resourses/fonts/cour.ttf", 0, &face))
+    FT_Error er = FT_New_Face(ft, "D:\\uni\\Starstream-Raiders\\/External resourses/fonts/cour.ttf", 0, &face);
+    if (er != 0)
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        std::cout << "ERROR::FREETYPE: Failed to load font. Error nr. " << er <<  std::endl;
         return;
     }
     FT_Set_Pixel_Sizes(face, 0, 48);

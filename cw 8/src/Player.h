@@ -9,7 +9,7 @@ private:
 public:
 	Player(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float batteryCapacity);
 
-	const float BatteryLeft() const;
+	float BatteryLeft() const;
 
 	void forward(bool doubleSpeed);
 	void backward(bool doubleSpeed);
