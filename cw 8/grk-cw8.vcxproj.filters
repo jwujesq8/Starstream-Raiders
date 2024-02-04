@@ -57,6 +57,9 @@
     <ClCompile Include="src\Calculations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\objload.h">
@@ -107,6 +110,12 @@
     <ClInclude Include="src\Timer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Characters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader_sun.vert">
@@ -137,6 +146,12 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="shaders\shader_laser.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_text.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\shader_text.frag">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

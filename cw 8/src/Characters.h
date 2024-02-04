@@ -2,14 +2,14 @@
 #include <map>
 #include <string>
 
-#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-
 #include <ft2build.h>
+#include <filesystem>
 #include FT_FREETYPE_H
 
 
@@ -26,16 +26,21 @@ struct Character {
 };
 
 
-
 std::map<char, Character> Characters;
 
 void generateCharacters() {
+    
+    /*std::string font_name = std::filesystem::current_path().string();
+    std::replace(font_name.begin(), font_name.end(), '\\', '/');
+
+    font_name += "/External Resourses/fonts/cour.ttf";
+    std::cout << std::endl << font_name << std::endl;*/
     if (FT_Init_FreeType(&ft))
     {
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         return;
     }
-    if (FT_New_Face(ft, "External resourses/fonts/cour.ttf", 0, &face))
+    if (FT_New_Face(ft, "External Resourses/fonts/cour.ttf", 0, &face))
     {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
         return;

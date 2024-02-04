@@ -28,6 +28,9 @@
   <ItemGroup>
     <ClInclude Include="src\Calculations.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Characters.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="src\ex_8_1.hpp" />
     <ClInclude Include="src\objload.h" />
     <ClInclude Include="src\Player.h" />
@@ -55,6 +58,8 @@
     <None Include="shaders\shader_sun.vert" />
     <None Include="shaders\shader_skybox.frag" />
     <None Include="shaders\shader_skybox.vert" />
+    <None Include="shaders\shader_text.frag" />
+    <None Include="shaders\shader_text.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6D813233-7D21-4888-944E-8E3CCAC3EFD3}</ProjectGuid>
@@ -105,13 +110,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;$(SolutionDir)/External resourses/assimp/include;$(SolutionDir)/External resourses/freetype/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/External resourses/glad/include;$(SolutionDir)/External resourses/GLM/glm;$(SolutionDir)/External resourses/GLFW/include;$(SolutionDir)/External resourses/GLEW/include;$(SolutionDir)/External resourses/assimp/include;$(SolutionDir)/External resourses/freetype/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;freetype.lib;glfw3.lib;assimp-vc143-mtd.lib;freeglut.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/freetype/lib;$(SolutionDir)/External resourses;$(SolutionDir)/External resourses/GLEW/lib/Release/Win32;$(SolutionDir)/External resourses/assimp;$(SolutionDir)/External resourses/assimp/lib;$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/ASSIMP;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/External resourses/freetype/include;$(SolutionDir)/External resourses/freetype/lib;$(SolutionDir)/External resourses;$(SolutionDir)/External resourses/GLEW/lib/Release/Win32;$(SolutionDir)/External resourses/assimp;$(SolutionDir)/External resourses/assimp/lib;$(SolutionDir)/External resourses/GLFW/lib-vc2022;$(SolutionDir)/External resourses/ASSIMP;$(SolutionDir)/External resourses/ASSIMP/include/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
