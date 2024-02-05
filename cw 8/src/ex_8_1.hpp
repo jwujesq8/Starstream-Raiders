@@ -414,8 +414,8 @@ void renderScene(GLFWwindow* window)
 
 	//drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
 	
-#pragma endregion
-#pragma region enemies
+	#pragma endregion
+	#pragma region enemies
 	for (int i = 0; i < enemies.size(); i++) {
 		//enemy.move();
 		SpaceTraveler enemy = enemies[i];
@@ -442,8 +442,7 @@ void renderScene(GLFWwindow* window)
 
 
 	drawObjectTexture(shipContext,
-		glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0) * 
-			glm::translate(glm::mat4(1.0), translateModelVec), glm::vec3(scaleModelIndex)),
+		glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
 		texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
 	);
 	//glm::mat4 shipRotationMatrix = glm::lookAt(player.Position(), player.Position() + player.Direction(), glm::vec3(0.0f, 1.0f, 0.0f));

@@ -84,9 +84,13 @@ void SpaceTraveler::turnRight() {
 }
 
 void SpaceTraveler::turnUp() {
-    direction = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(direction, 0));
+    glm::vec3 right = glm::normalize(glm::cross(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), angleSpeed, right);
+    direction = glm::vec3(rotation * glm::vec4(direction, 0));
 }
 
 void SpaceTraveler::turnDown() {
-    direction = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(direction, 0));
+    glm::vec3 right = glm::normalize(glm::cross(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), -angleSpeed, right);
+    direction = glm::vec3(rotation * glm::vec4(direction, 0));
 }
