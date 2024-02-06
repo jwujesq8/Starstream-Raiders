@@ -11,6 +11,11 @@ float Player::BatteryLeft() const
 	return batteryLeft;
 }
 
+float Player::BatteryCapacity() const
+{
+	return batteryCapacity;
+}
+
 void Player::forward(bool doubleSpeed)
 {
 	if (batteryLeft > 0) {

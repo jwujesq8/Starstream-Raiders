@@ -1,9 +1,12 @@
+#pragma once
+
 #include <iostream>
 #include <chrono>
 #include <thread>
 #include <functional>
 #include <mutex>
 #include <condition_variable>
+#include "Space_Traveler.h"
 
 class ShotTimer {
 public:
@@ -27,3 +30,4 @@ private:
     std::vector<SpaceTraveler>& enemies;
     std::thread wait_thread{ [this]() {wait_then_call(); } };
 };
+

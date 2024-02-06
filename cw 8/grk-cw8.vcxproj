@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Mission.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Space_Traveler.cpp" />
     <ClCompile Include="src\Box.cpp" />
@@ -32,6 +33,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="src\ex_8_1.hpp" />
+    <ClInclude Include="src\Mission.h" />
     <ClInclude Include="src\objload.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Render_Utils.h" />
