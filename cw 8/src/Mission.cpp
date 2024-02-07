@@ -1,6 +1,7 @@
 #include "Mission.h"
 
 
+
 Mission::Mission()
 {
 }
@@ -8,6 +9,19 @@ Mission::Mission()
 Mission::Mission(float duration, glm::vec3 destination, float rotationSpeed, std::string albedoPath, std::string normalPath, std::string roughnessPath, std::string metallicPath) :
 	duration(duration), destination(destination), rotationSpeed(rotationSpeed)
 {
+	containerTextures.albedo = Core::LoadTexture(albedoPath.data());
+	containerTextures.normal = Core::LoadTexture(normalPath.data());
+	containerTextures.roughness = Core::LoadTexture(roughnessPath.data());
+	containerTextures.metallic = Core::LoadTexture(metallicPath.data());
+	missionStartTime = 0.0f;
+	missionActive = false;
+	missionFailTime = 0.0f;
+	missionSuccessTime = 0.0f;
+}
+Mission::Mission(float duration, Planet planet, std::string albedoPath, std::string normalPath, std::string roughnessPath, std::string metallicPath) : duration(duration)
+{
+	destination = planet.translation;
+	rotationSpeed = planet.rotationSpeed;
 	containerTextures.albedo = Core::LoadTexture(albedoPath.data());
 	containerTextures.normal = Core::LoadTexture(normalPath.data());
 	containerTextures.roughness = Core::LoadTexture(roughnessPath.data());

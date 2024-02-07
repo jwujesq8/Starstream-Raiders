@@ -50,7 +50,6 @@ bool SpaceTraveler::IsAlive() {
 
 // Functions
 void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
-    std::cout << "BAM" << std::endl;
     glm::vec3 targetsMin;
     glm::vec3 targetsMax;
 
