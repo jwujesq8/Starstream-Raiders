@@ -35,6 +35,8 @@ public:
     const glm::vec3 Size() const;
     const float LastTimeShot() const;
     const float Cooldown() const;
+    int HPLeft() const;
+    int MaxHP() const;
     bool IsAlive();
     SpaceshipModel getSpaceshipModel();
     void setSpaceshipModel(SpaceshipModel spaceshipModel);

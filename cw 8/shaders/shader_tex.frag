@@ -33,17 +33,6 @@ in vec2 fragTexCoord;
 
 out vec4 outColor;
 
-vec3 phongLight(vec3 lightDir, vec3 lightColor, vec3 normal,vec3 viewDir){
-	float diffuse=max(0,dot(normal,lightDir));
-
-	vec3 R = reflect(-lightDir, normal);  
-
-	float specular = pow(max(dot(viewDir, R), 0.0), 32);
-
-	vec3 resultColor = bColor*diffuse*lightColor+lightColor*specular;
-	return resultColor;
-}
-
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);

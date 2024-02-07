@@ -50,6 +50,13 @@
     <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\bloom\bloom.frag" />
+    <None Include="shaders\bloom\bloom.vert" />
+    <None Include="shaders\bloom\bloomFinal.frag" />
+    <None Include="shaders\bloom\bloomFinal.vert" />
+    <None Include="shaders\bloom\blur.frag" />
+    <None Include="shaders\bloom\blur.vert" />
+    <None Include="shaders\bloom\lightBox.frag" />
     <None Include="shaders\shader_laser.frag" />
     <None Include="shaders\shader_laser.vert" />
     <None Include="shaders\shader_tex.frag" />

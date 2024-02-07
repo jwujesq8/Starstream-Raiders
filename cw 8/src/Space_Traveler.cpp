@@ -37,6 +37,16 @@ const float SpaceTraveler::Cooldown() const
     return cooldown;
 }
 
+int SpaceTraveler::HPLeft() const
+{
+    return hp;
+}
+
+int SpaceTraveler::MaxHP() const
+{
+    return maxHp;
+}
+
 SpaceshipModel SpaceTraveler::getSpaceshipModel() {
     return spaceshipModel;
 }

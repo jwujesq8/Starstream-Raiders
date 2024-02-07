@@ -160,5 +160,26 @@
     <None Include="shaders\shader_text.frag">
       <Filter>Shader Files</Filter>
     </None>
+    <None Include="shaders\bloom\bloom.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\bloom.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\lightBox.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\blur.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\blur.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\bloomFinal.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="shaders\bloom\bloomFinal.frag">
+      <Filter>Shader Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

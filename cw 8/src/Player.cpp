@@ -52,7 +52,6 @@ void Player::shoot(std::vector<SpaceTraveler>& targets)
 void Player::charge()
 {
 	batteryLeft = batteryCapacity;
-	std::cout << "battery condition: " << batteryLeft << std::endl;
 }
 
 

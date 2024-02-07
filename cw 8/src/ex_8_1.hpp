@@ -162,6 +162,10 @@ float shotDuration = 1.0f;
 unsigned int VAOtext, VBOtext;
 glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 
+//BLOOM
+unsigned int hdrFBO;
+unsigned int colorBuffers[2];
+
 bool isShipOnStation(SpaceTraveler ship) {
 	glm::vec3 stationPosition = glm::vec3(stationPosMatrix[3]);
 
@@ -400,7 +404,6 @@ void drawDestinationPoint(glm::vec3 translation, float rotationSpeed, Mission mi
 	Core::DrawContext(sphereContext);
 }
 
-
 void renderScene(GLFWwindow* window)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -495,7 +498,8 @@ void renderScene(GLFWwindow* window)
 	}
 	#pragma endregion
 	#pragma region text
-	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)), glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)) + "%", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f); //battery
+	drawText(std::to_string(player.HPLeft()) + " HP", glm::vec3(0.5, 0.8f, 0.2f), 100.0f, 540.0f, 1.0f); //health
 	if (isShipOnStation(player)) {
 		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 1.0f);
 	}
@@ -562,9 +566,6 @@ void init(GLFWwindow* window)
 
 	generateCharacters();
 	
-	//spaceshipModelList.fillList();
-	//TODO LENA: replace last argument with the actual size
-	//currentSpaceship = spaceshipModelList.getNextModel();
 	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
 	texture::spaceshipAlbedo = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureBaseColorPath.data());
 	texture::spaceshipNormal = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureNormalPath.data());
@@ -702,14 +703,6 @@ void processInput(GLFWwindow* window)
 		player.forward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		player.backward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-	//	player.glideRight();//spaceshipPos += spaceshipSide * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-	//	player.glideLeft();//spaceshipPos -= spaceshipSide * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	//	player.up();//spaceshipPos += spaceshipUp * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-	//	player.down();//spaceshipPos -= spaceshipUp * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -785,6 +778,7 @@ void setNextMission()
 {
 	missions.erase(missions.begin());
 	currentMission = missions[0];
+	//TODO
 }
 
 
