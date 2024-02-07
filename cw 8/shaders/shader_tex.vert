@@ -13,17 +13,15 @@ out vec3 vecNormal;
 out vec3 worldPos;
 
 uniform vec3 lightPos;
-uniform vec3 spotlightPos;
 uniform vec3 cameraPos;
 
 out vec3 viewDirTS;
 out vec3 lightDirTS;
-out vec3 spotlightDirTS;
 out vec2 fragTexCoord;
 
 void main()
 {
-	worldPos = (modelMatrix* vec4(vertexPosition,1)).xyz;
+	worldPos = (modelMatrix* vec4(vertexPosition,1)).xyz;//
 	vecNormal = normalize((modelMatrix * vec4(vertexNormal,0)).xyz);
 	gl_Position = transformation * vec4(vertexPosition, 1.0);
 	vec3 w_tangent = normalize(mat3(modelMatrix)*vertexTangent);
@@ -34,8 +32,6 @@ void main()
 	viewDirTS = TBN*V;
 	vec3 L = normalize(lightPos-worldPos);
 	lightDirTS = TBN*L;
-	vec3 SL = normalize(spotlightPos-worldPos);
-	spotlightDirTS = TBN*SL;
 	fragTexCoord = vertexTexCoord;
 
 

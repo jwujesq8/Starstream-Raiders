@@ -10,7 +10,6 @@
 #include "ex_8_1.hpp"
 
 
-
 int main(int argc, char** argv)
 {
 	glfwInit();
@@ -34,7 +33,7 @@ int main(int argc, char** argv)
 
 	// ladowanie OpenGL za pomoca glew
 	glewInit();
-	glViewport(0, 0, 500, 500);
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
 	init(window);
 
