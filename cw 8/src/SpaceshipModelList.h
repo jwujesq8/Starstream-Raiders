@@ -27,14 +27,14 @@ private:
             "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[Metalness].png",
             "./models/spaceshipModels/1/textures/DeathRow_Low_Cube001_[Roughness].png"},
         SpaceshipModel{"./models/spaceshipModels/2/spaceship_2.obj",
-            "./models/spaceshipModels/2/textures/Material.001_Base_color.png",
-            "./models/spaceshipModels/2/textures/Material.001_Normal_DirectX.png",
-            "./models/spaceshipModels/2/textures/Material.001_Metallic.png",
-            "./models/spaceshipModels/2/textures/Material.001_Roughness.png"},
+            "./models/spaceshipModels/2/textures/Material.001_Base_color.jpg",
+            "./models/spaceshipModels/2/textures/Material.001_Normal_DirectX.jpg",
+            "./models/spaceshipModels/2/textures/Material.001_Metallic.jpg",
+            "./models/spaceshipModels/2/textures/Material.001_Roughness.jpg"},
         SpaceshipModel{"./models/spaceshipModels/3/spaceship_3.obj",
-            "./models/spaceshipModels/3/textures/paint_texture_glow1.png",
-            "./models/spaceshipModels/3/textures/paint_texture_normal.png",
             "./models/spaceshipModels/3/textures/paint_texture_diffuse.png",
+            "./models/spaceshipModels/3/textures/paint_texture_normal.png",
+            "./models/spaceshipModels/3/textures/paint_texture_glow1.png",
             "./models/spaceshipModels/3/textures/Material.001_Roughness.png"}
     };
     SpaceshipModel currentSpaceshipModel;
