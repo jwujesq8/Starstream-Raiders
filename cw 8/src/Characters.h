@@ -10,8 +10,9 @@
 #include <gtc/type_ptr.hpp>
 #include <ft2build.h>
 #include <filesystem>
+#include <stdio.h>
 #include FT_FREETYPE_H
-
+namespace fs = std::filesystem;
 
 
 FT_Library ft;
@@ -41,10 +42,14 @@ void generateCharacters() {
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         return;
     }
-    FT_Error er = FT_New_Face(ft, "D:\\uni\\Starstream-Raiders\\/External resourses/fonts/cour.ttf", 0, &face);
+    fs::path currentPath = fs::current_path();
+    fs::path parentPath = currentPath.parent_path();
+    std::cout << parentPath << std::endl;
+    std::string filePath = parentPath.string() + "/External resourses/fonts/cour.ttf";
+    FT_Error er = FT_New_Face(ft, filePath.c_str(), 0, &face);
     if (er != 0)
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font. Error nr. " << er <<  std::endl;
+        std::cout << "ERROR::FREETYPE: Failed to load font. Error nr. " << er << std::endl;
         return;
     }
     FT_Set_Pixel_Sizes(face, 0, 48);
