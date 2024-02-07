@@ -11,6 +11,11 @@ float Player::BatteryLeft() const
 	return batteryLeft;
 }
 
+float Player::BatteryCapacity() const
+{
+	return batteryCapacity;
+}
+
 void Player::forward(bool doubleSpeed)
 {
 	if (batteryLeft > 0) {
@@ -37,7 +42,7 @@ void Player::shoot(std::vector<SpaceTraveler>& targets)
 {
 	if (batteryLeft > 0) {
 		SpaceTraveler::shoot(targets);
-		batteryLeft -= batteryDrainSpeed * 5;
+		batteryLeft -= batteryDrainSpeed * 100;
 	}
 	else {
 		std::cout << "Your ship needs to be charged" << std::endl;

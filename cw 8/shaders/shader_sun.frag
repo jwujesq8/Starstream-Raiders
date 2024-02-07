@@ -7,5 +7,5 @@ in vec2 fragmentTexCoord;
 void main()
 {
 	vec3 color = texture2D(texture1, fragmentTexCoord).rgb;
-	out_color = vec4(color, 1.0);
+	out_color = vec4(0.9, 0.9, 0.05, 1.0);
 }

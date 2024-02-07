@@ -25,11 +25,14 @@
 #include "Player.h"
 #include <ft2build.h>
 #include "Characters.h"
+#include "Mission.h"
 
 
 
 
 #include FT_FREETYPE_H  
+std::vector<Planet> planets = {
+};
 
 namespace texture {
 	GLuint earth;
@@ -124,12 +127,14 @@ glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
 
 
 glm::mat4 stationPosMatrix = glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f));
-
+std::vector<Mission> missions = {};
+Mission currentMission;
 
 // for stable ships score
 float lastFrameTime = 0;
 float deltaTime;
-
+float missionSuccess = 0.0;
+bool win = false;
 GLuint VAO,VBO;
 
 float aspectRatio = 1.f;
@@ -137,7 +142,7 @@ float aspectRatio = 1.f;
 float exposition = 1.f;
 
 glm::vec3 lightPos = glm::vec3(0.f, 10.f, 0.f);
-glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*100.0f;
+glm::vec3 lightColor = glm::vec3(0.9, 0.7, 0.8)*2000.0f;
 
 glm::vec3 spotlightPos = glm::vec3(0, 0, 0);
 glm::vec3 spotlightConeDir = glm::vec3(0, 0, 0);
@@ -147,7 +152,7 @@ float spotlightPhi = 3.14 / 3;
 
 SpaceshipModelList spaceshipModels;
 
-Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(0.479490f, 1.000000f, -2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
+Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(10.0, 1.000000f, -7.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
 std::vector<SpaceTraveler> enemies;
 
 float scaleModelIndex = 0.1;
@@ -157,7 +162,24 @@ float shotDuration = 1.0f;
 unsigned int VAOtext, VBOtext;
 glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 
+bool isShipOnStation(SpaceTraveler ship) {
+	glm::vec3 stationPosition = glm::vec3(stationPosMatrix[3]);
 
+	float threshold = 1.5f;
+	float shipStationdistance = glm::distance(ship.Position(), stationPosition);
+
+	return shipStationdistance < threshold;
+}
+
+bool isShipNearDestination(SpaceTraveler ship, Mission mission) {
+	float threshold = 5.0f;
+	glm::vec3 shipPos = ship.Position();
+	glm::vec3 planetPosBeforeRotation = mission.TranslationVector();
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0), (float)glfwGetTime() * mission.RotationSpeed(), glm::vec3(0, 1, 0));
+	glm::vec4 planetPosAfterRotation = rotationMatrix * glm::vec4(planetPosBeforeRotation, 1.0);
+	float distance = glm::length(shipPos - glm::vec3(planetPosAfterRotation));
+	return distance < threshold;
+}
 
 glm::mat4 createCameraMatrix()
 {
@@ -243,14 +265,12 @@ void drawSkybox(glm::mat4 modelMatrix) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-
-
 void drawStar(Core::RenderContext& context, glm::mat4 modelMatrix, GLuint texture)
 {
 	glUseProgram(programSun);
 	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
 	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
-	glUniformMatrix4fv(glGetUniformLocation(programTex, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glUniformMatrix4fv(glGetUniformLocation(programSun, "transformation"), 1, GL_FALSE, (float*)&transformation);
 
 	Core::SetActiveTexture(texture, "texture1", programSun, 0);
 
@@ -365,6 +385,21 @@ void drawText(std::string text, glm::vec3 color, float x, float y, float scale)
 
 }
 
+void drawDestinationPoint(glm::vec3 translation, float rotationSpeed, Mission mission) {
+	glUseProgram(program);
+	float time = glfwGetTime();
+	glm::mat4 viewProjectionMatrix = createPerspectiveMatrix() * createCameraMatrix();
+	glm::vec3 planetPosBeforeRotation = mission.TranslationVector();
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0), time * mission.RotationSpeed(), glm::vec3(0, 1, 0));
+	glm::vec3 planetPosAfterRotation = glm::vec3(rotationMatrix * glm::vec4(planetPosBeforeRotation, 1.0));
+	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0), planetPosAfterRotation + glm::vec3(0.0, 5.f + sin(time) * 0.5, 0.0));
+	glm::mat4 transformation = viewProjectionMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(program, "transformation"), 1, GL_FALSE, (float*)&transformation);
+	glUniformMatrix4fv(glGetUniformLocation(program, "modelMatrix"), 1, GL_FALSE, (float*)&modelMatrix);
+	glUniform3f(glGetUniformLocation(program, "baseColor"), 0.8, 0.1, 0.1);
+	Core::DrawContext(sphereContext);
+}
+
 
 void renderScene(GLFWwindow* window)
 {
@@ -381,38 +416,28 @@ void renderScene(GLFWwindow* window)
 	glUseProgram(program);
 
 	#pragma region planets
-	drawStar(sphereContext, glm::mat4(1.0), texture::sun);
+	for (int i = 0; i < planets.size(); i++)
+	{
+		drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * planets[i].rotationSpeed, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), planets[i].translation) * glm::scale(glm::mat4(1.0), glm::vec3(planets[i].scaleFactor)),
+			planets[i].albedo, planets[i].normal, planets[i].roughness, planets[i].metallic);
+	}
+	//drawStar(sphereContext, glm::mat4(1.0), texture::sun);
 	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)) * glm::rotate(glm::mat4(1.0), 1.57f, glm::vec3(0, 0, 1)), glm::vec3(0.2), 0.3, 0.6);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.15f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(16.0, 0, 0)),
-		texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.35f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(7.0, 0, 0)),
-		texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty);
 	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.3f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(13.0, 2., 0)) *
 		glm::scale(glm::mat4(1.0), glm::vec3(0.0002f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.07f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(26.0, 0, 0)),
-		texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty);
-	drawObjectTexture(asteroidContext_0, glm::rotate(glm::mat4(1.0), time * 0.0813f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(33.0, 0, 0)),
+	drawObjectTexture(asteroidContext_0, glm::rotate(glm::mat4(1.0), time * 0.000813f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(33.0, 0, 0)),
 		texture::asteroidBaseColor_0, texture::empty, texture::empty, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.045f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(38.0, 0, 0)),
-		texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.030f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(43.0, 0, 0)),
-		texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty);
-	drawObjectTexture(asteroidContext_3, glm::rotate(glm::mat4(1.0), time * 0.13f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
+	drawObjectTexture(asteroidContext_3, glm::rotate(glm::mat4(1.0), time * 0.0013f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(50.0, 0, 0)),
 		texture::asteroidBaseColor_3, texture::asteroidNormal_3, texture::empty, texture::asteroidMetallic_3);
-	drawObjectTexture(planet, glm::rotate(glm::mat4(1.0), time * 0.022f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(53.0, 0, 0)),
-		texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty);
-	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.17f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(57., -0.5, 0)) *
+	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.0017f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(57., -0.5, 0)) *
 		glm::scale(glm::mat4(1.0), glm::vec3(0.001f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
-	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.03f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(64., 0.5, 0)) *
+	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.003f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(64., 0.5, 0)) *
 		glm::scale(glm::mat4(1.0), glm::vec3(0.0014f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
-	//drawStar(sun, glm::mat4(1.0), texture::sun);
+	drawStar(sun, glm::translate(glm::mat4(1.0), glm::vec3(0, 0, 0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.3)), texture::sun);
 	
-	//drawObjectColor(bulletContext, glm::translate(glm::mat4(1.0), glm::vec3(5.0f, 0.f, 5.0f)), glm::vec3(1.0, 0.0, 1.0), 0, 0);
-
-	//drawObjectColor(sphereContext, glm::translate(glm::mat4(1.0), glm::vec3(2.0)), glm::vec3(0.5), 0.5, 0.5);
 	
 	#pragma endregion
 	#pragma region enemies
@@ -428,7 +453,7 @@ void renderScene(GLFWwindow* window)
 		}
 		drawLaser(enemy);
 	}
-#pragma endregion
+	#pragma endregion
 	#pragma region spaceship
 
 	glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
@@ -459,8 +484,41 @@ void renderScene(GLFWwindow* window)
 	spotlightConeDir = player.Direction();
 
 #pragma endregion
-	
-	drawText(std::to_string(player.BatteryLeft()), glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+	#pragma region mission
+	if (currentMission.IsActive()) {
+		drawText(std::to_string(currentMission.TimeLeft()), glm::vec3(0.8f, 0.1f, 0.1f), 250.0f, 570.0f, 0.8f);
+		
+		drawDestinationPoint(currentMission.TranslationVector(), currentMission.RotationSpeed(), currentMission);
+		drawObjectTexture(currentMission.CargoContext(),
+			 glm::translate(glm::mat4(1.0), player.Position() + glm::vec3(0.0, 2.0, 0.0)) * spaceshipCameraRotrationMatrix * glm::scale(glm::mat4(1.0), glm::vec3(0.01)),
+			currentMission.Albedo(), currentMission.Normal(), currentMission.Roughness(), currentMission.Metallic());
+	}
+	#pragma endregion
+	#pragma region text
+	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)), glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+	if (isShipOnStation(player)) {
+		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 1.0f);
+	}
+	if (isShipOnStation(player) && !currentMission.IsActive()) {
+		drawText("Press F to start mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 450.0f, 1.0f);
+	}
+	if (currentMission.IsActive() && isShipNearDestination(player, currentMission)) {
+		drawText("Press F to end mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 500.0f, 1.0f);
+	}
+	if(time - currentMission.MissionFailTime() < 3.f)
+	{
+		drawText("Mission failed", glm::vec3(0.8f, 0.1f, 0.1f), 250.0f, 250.0f, 1.0f);
+	}
+	if(time - missionSuccess < 3.f)
+	{
+		drawText("Mission success", glm::vec3(0.1f, 0.8f, 0.1f), 250.0f, 250.0f, 1.0f);
+	}
+	if(win)
+	{
+		drawText("You win", glm::vec3(0.1f, 0.8f, 0.1f), 250.0f, 200.0f, 1.0f);
+	}
+
+	#pragma endregion
 
 
 	glUseProgram(0);
@@ -483,7 +541,6 @@ void loadModelToContext(std::string path, Core::RenderContext& context)
 	}
 	context.initFromAssimpMesh(scene->mMeshes[0]);
 }
-
 void init(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -522,6 +579,7 @@ void init(GLFWwindow* window)
 	loadModelToContext("./models/asteroids/2/asteroid_2.obj", asteroidContext_2);
 	loadModelToContext("./models/asteroids/3/asteroid_3.obj", asteroidContext_3);
 	loadModelToContext("./models/lazer_bullet.obj", bulletContext);
+	loadModelToContext("./models/sun.obj", sun);
 	for (int i = 0; i < enemies.size(); i++) {
 		Core::RenderContext enemyContext;
 		loadModelToContext(enemies[i].getSpaceshipModel().mainModelPath, enemyContext);
@@ -542,8 +600,8 @@ void init(GLFWwindow* window)
 	};
 	texture::skybox = Core::LoadSkybox(skyboxPaths);
 
-
-	texture::sun = Core::LoadTexture("./textures/Planets/sun.jpg");
+	#pragma region planets
+	texture::sun = Core::LoadTexture("./textures/sun.jpg");
 	texture::planetContinentBase = Core::LoadTexture("./textures/Planets/planet_continental_Base_Color.jpg");
 	texture::planetContinentNormal = Core::LoadTexture("./textures/Planets/planet_continental_Normal_OpenGL.png");
 	texture::planetContinentRoughness = Core::LoadTexture("./textures/Planets/planet_continental_Roughness.png");
@@ -583,6 +641,26 @@ void init(GLFWwindow* window)
 	texture::asteroidBaseColor_3 = Core::LoadTexture("./models/asteroids/3/textures/Displacement.png");
 	texture::asteroidMetallic_3 = Core::LoadTexture("./models/asteroids/3/textures/Metalness.png");
 	texture::asteroidNormal_3 = Core::LoadTexture("./models/asteroids/3/textures/Normal.png");
+
+	planets = {
+		Planet(glm::vec3(16.0f, 0.f, 10.0f), 2.5f, 0.02f, texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic),
+		Planet(glm::vec3(-7.0f, 0.f, 6.0f), 3.f, 0.035f, texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty),
+		Planet(glm::vec3(26.0f, 0.f, -15.0f), 3.f, 0.014f, texture::planetFrozenBase, texture::planetFrozenNormal, texture::planetFrozenRoughness, texture::empty),
+		Planet(glm::vec3(-38.0f, 0.f, -3.0f), 3.f, 0.007f, texture::planetGasBase, texture::planetGasNormal, texture::empty, texture::empty),
+		Planet(glm::vec3(43.0, 0.0, 0.0), 5.f, 0.009, texture::planetLavaBase, texture::planetLavaNormal, texture::planetLavaRoughness, texture::empty),
+		Planet(glm::vec3(-53.0, 25.0, 0.0), 5.f, 0.022, texture::planetSmacBase, texture::planetSmacNormal, texture::planetSmacRoughness, texture::empty)
+	};
+
+	#pragma endregion
+
+	missions = {
+	Mission(30.f, planets[2], "textures/containers/cargocrate1_BaseColor.png", "textures/containers/cargocrate1_Normal.png", "textures/containers/cargocrate1_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
+	Mission(30.f, planets[3], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
+	Mission(30.f, planets[5], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
+	};
+
+	currentMission = missions[0];
+
 	std::cout << "textures loaded" << std::endl;
 	//texture::ao = Core::LoadTexture("./textures/water/rustediron1-alt2-bl/Pool_Water_Texture_ao.jpg");
 
@@ -610,15 +688,6 @@ void shutdown(GLFWwindow* window)
 	shaderLoader.DeleteProgram(program);
 }
 
-
-bool isShipOnStation(const glm::vec3 shipPos) {
-	glm::vec3 stationPosition = glm::vec3(stationPosMatrix[3]);
-
-	float distanceEdge = 1.5f;
-	float shipStationdistance = glm::distance(shipPos, stationPosition);
-
-	return shipStationdistance < distanceEdge;
-}
 
 void processInput(GLFWwindow* window)
 {
@@ -649,8 +718,20 @@ void processInput(GLFWwindow* window)
 		player.turnUp();//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		player.turnDown();//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && isShipOnStation(player.Position()))
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && isShipOnStation(player))
 		player.charge();
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && isShipOnStation(player) && !currentMission.IsActive()) {
+		currentMission.StartMission();
+	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && currentMission.IsActive() && isShipNearDestination(player, currentMission)) {
+		currentMission.EndMission();
+		missionSuccess = glfwGetTime();
+		missions.erase(missions.begin());
+		if (missions.size() > 0)
+			currentMission = missions[0];
+		else
+			win = true;
+	}
 
 	cameraPos = player.Position() - 1.5f * player.Direction() + glm::vec3(0, 1, 0) * 0.5f;
 	cameraDir = player.Direction();
@@ -660,7 +741,7 @@ void processInput(GLFWwindow* window)
 		exposition += 0.05;
 
 	//change the spaceships model (it's available only on the station)
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && isShipOnStation(player.Position())) {
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && isShipOnStation(player)) {
 		
 		spaceshipModels.setNextModel();
 
@@ -699,6 +780,13 @@ void processInput(GLFWwindow* window)
 	//cameraDir = glm::normalize(-cameraPos);
 
 }
+
+void setNextMission()
+{
+	missions.erase(missions.begin());
+	currentMission = missions[0];
+}
+
 
 void renderLoop(GLFWwindow* window) {
 	while (!glfwWindowShouldClose(window))
