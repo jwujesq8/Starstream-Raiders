@@ -513,7 +513,7 @@ void renderScene(GLFWwindow* window)
 			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
 			std::cout << "index: " << i << ", " << enemies[i].Position().x << "   " << enemies[i].Direction().x << std::endl;
 			drawObjectTexture(enemyContexts[i],
-				glm::translate(glm::mat4(1.0), enemies[i].Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.033)),
+				glm::translate(glm::mat4(1.0), enemies[i].Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(1.0)),
 				texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]
 			);
 			
@@ -611,9 +611,16 @@ void loadModelToContext(std::string path, Core::RenderContext& context)
 void init(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	std::vector<SpaceshipModel> ufoModelShip = {
+		SpaceshipModel{"./models/ufo/UFO.obj",
+			"./models/ufo/textures/ufo_base.png",
+			"./models/ufo/textures/ufo_normal.png",
+			"./models/ufo/textures/ufo_metal.png",
+			"./models/ufo/textures/ufo_roughness.png"}
+	};
 	enemies = {
-		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[1], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
-		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[2], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
 	};
 
 	glEnable(GL_DEPTH_TEST);
