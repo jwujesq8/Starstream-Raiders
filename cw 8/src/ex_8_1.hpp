@@ -159,6 +159,8 @@ float scaleModelIndex = 0.1;
 glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
 float maxBoidsSpeed = 0.005f;
+float enemyLastAdded = glfwGetTime();
+float enemyAddCooldown = 7.0f;
 
 unsigned int VAOtext, VBOtext;
 glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
@@ -217,6 +219,23 @@ glm::mat4 createPerspectiveMatrix()
 	perspectiveMatrix=glm::transpose(perspectiveMatrix);
 
 	return perspectiveMatrix;
+}
+
+void addEnemy() {
+	SpaceshipModel ufoModelShip = SpaceshipModel{ "./models/ufo/UFO.obj",
+			"./models/ufo/textures/ufo_base.png",
+			"./models/ufo/textures/ufo_normal.png",
+			"./models/ufo/textures/ufo_metal.png",
+			"./models/ufo/textures/ufo_roughness.png" };
+	srand(time(0));
+	int xzlb = -20;
+	int xzub = 20;
+	int ylb = -1;
+	int yub = 1;
+	glm::vec3 newPosition = glm::vec3(rand() % (xzub - xzlb + 1) + xzlb, rand() % (yub - ylb + 1) + ylb, rand() % (xzub - xzlb + 1) + xzlb);
+	glm::vec3 newDirection = glm::normalize(player.Position() - newPosition);
+	enemies.push_back(SpaceTraveler(20, ufoModelShip, 10, newPosition, glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 3.0f));
+
 }
 
 void drawObjectColor(Core::RenderContext& context, glm::mat4 modelMatrix, glm::vec3 color, float roughness, float metallic) {
@@ -313,16 +332,16 @@ void drawLaser(SpaceTraveler entity) {
 		glm::vec3 laserDir = entity.Direction();
 		glm::vec3 laserColor = glm::vec3(1.0, 0.0, 1.0);
 
-		glm::vec3 spaceshipSide = glm::normalize(glm::cross(player.Direction(), glm::vec3(0.f, 1.f, 0.f)));
-		glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, player.Direction()));
+		glm::vec3 spaceshipSide = glm::normalize(glm::cross(entity.Direction(), glm::vec3(0.f, 1.f, 0.f)));
+		glm::vec3 spaceshipUp = glm::normalize(glm::cross(spaceshipSide, entity.Direction()));
 		glm::mat4 spaceshipCameraRotrationMatrix = glm::mat4({
 			spaceshipSide.x,spaceshipSide.y,spaceshipSide.z,0,
 			spaceshipUp.x,spaceshipUp.y,spaceshipUp.z ,0,
-			-player.Direction().x,-player.Direction().y,-player.Direction().z,0,
+			-entity.Direction().x,-entity.Direction().y,-entity.Direction().z,0,
 			0.,0.,0.,1.,
 			});
 
-		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0), player.Direction()*75.3f) * glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>())
+		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0), entity.Direction()*75.3f) * glm::translate(glm::mat4(1.0), entity.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>())
 			* glm::rotate(glm::mat4(1.0), glm::pi<float>(), glm::vec3(0, 1, 0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.002f * power, 0.002f * power, 1.0f));
 
 		glUseProgram(programLaser);
@@ -437,13 +456,15 @@ glm::vec3 tendToTarget(const SpaceTraveler& enemy, const glm::vec3& targetPositi
 	return steer;
 }
 
-//void attackThePlayer(SpaceTraveler& enemy) {
-//	if (3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f) {
-//		if (enemy.IsAlive()) {
-//			enemy.shoot(player);
-//		}
-//	}
-//}
+void attackThePlayer(SpaceTraveler& enemy) {
+	std::vector<SpaceTraveler> targets;
+	targets.push_back(player);
+	if (3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f && enemy.LastTimeShot() + enemy.Cooldown() < glfwGetTime()) {
+		if (enemy.IsAlive()) {
+			ShotTimer t1{ (size_t)(shotDuration / 2.0f), enemy, targets};
+		}
+	}
+}
 
 void enemyMove(SpaceTraveler& enemy, int enemies_index) {
 	glm::vec3 v1 = rule1(enemy, enemies_index);
@@ -510,6 +531,8 @@ void renderScene(GLFWwindow* window)
 		//enemy.move();
 		if (enemies[i].IsAlive()) {
 			enemyMove(enemies[i], i);
+			attackThePlayer(enemies[i]);
+			drawLaser(enemies[i]);
 			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
 			std::cout << "index: " << i << ", " << enemies[i].Position().x << "   " << enemies[i].Direction().x << std::endl;
 			drawObjectTexture(enemyContexts[i],
@@ -532,21 +555,13 @@ void renderScene(GLFWwindow* window)
 		0.,0.,0.,1.,
 		});
 
-
-	drawObjectTexture(shipContext,
-		glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
-		texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
-	);
-	//glm::mat4 shipRotationMatrix = glm::lookAt(player.Position(), player.Position() + player.Direction(), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	//// Apply the rotation matrix to the model matrix
-	//drawObjectTexture(shipContext,
-	//	glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>())
-	//	* shipRotationMatrix
-	//	* glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
-	//	texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
-	//);
-	drawLaser(player);
+	if (player.IsAlive()) {
+		drawObjectTexture(shipContext,
+			glm::translate(glm::mat4(1.0), player.Position()) * spaceshipCameraRotrationMatrix * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(scaleModelIndex)),
+			texture::spaceshipAlbedo, texture::spaceshipNormal, texture::spaceshipRoughness, texture::spaceshipMetallic
+		);
+		drawLaser(player);
+	}
 	spotlightPos = player.Position() + 0.5f * player.Direction();
 	spotlightConeDir = player.Direction();
 
@@ -562,7 +577,9 @@ void renderScene(GLFWwindow* window)
 	}
 	#pragma endregion
 	#pragma region text
-	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)), glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)) + "%", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
+	drawText(std::to_string(player.Hp()), glm::vec3(0.8, 0.5f, 0.2f), 125.0f, 570.0f, 1.0f);
+
 	if (isShipOnStation(player)) {
 		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 1.0f);
 	}
@@ -580,7 +597,11 @@ void renderScene(GLFWwindow* window)
 	{
 		drawText("Mission success", glm::vec3(0.1f, 0.8f, 0.1f), 250.0f, 250.0f, 1.0f);
 	}
-	if(win)
+	if(!player.IsAlive())
+	{
+		drawText("You lose", glm::vec3(0.8f, 0.1f, 0.1f), 250.0f, 200.0f, 1.0f);
+	}
+	else if(win)
 	{
 		drawText("You win", glm::vec3(0.1f, 0.8f, 0.1f), 250.0f, 200.0f, 1.0f);
 	}
@@ -619,8 +640,8 @@ void init(GLFWwindow* window)
 			"./models/ufo/textures/ufo_roughness.png"}
 	};
 	enemies = {
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 4.0f),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 3.0f),
 	};
 
 	glEnable(GL_DEPTH_TEST);
@@ -639,6 +660,8 @@ void init(GLFWwindow* window)
 	//spaceshipModelList.fillList();
 	//TODO LENA: replace last argument with the actual size
 	//currentSpaceship = spaceshipModelList.getNextModel();
+	std::cout<<player.getSpaceshipModel().mainModelPath<<std::endl;
+	std::string playerModelPath = player.getSpaceshipModel().mainModelPath;
 	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
 	texture::spaceshipAlbedo = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureBaseColorPath.data());
 	texture::spaceshipNormal = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureNormalPath.data());
@@ -776,14 +799,6 @@ void processInput(GLFWwindow* window)
 		player.forward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		player.backward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-	//	player.glideRight();//spaceshipPos += spaceshipSide * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-	//	player.glideLeft();//spaceshipPos -= spaceshipSide * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	//	player.up();//spaceshipPos += spaceshipUp * moveSpeed;
-	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-	//	player.down();//spaceshipPos -= spaceshipUp * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
@@ -853,12 +868,6 @@ void processInput(GLFWwindow* window)
 
 	//cameraDir = glm::normalize(-cameraPos);
 
-}
-
-void setNextMission()
-{
-	missions.erase(missions.begin());
-	currentMission = missions[0];
 }
 
 

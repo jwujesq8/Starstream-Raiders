@@ -27,7 +27,8 @@ private:
     void getShot(int damage);
 
 public:
-    SpaceTraveler(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size);
+    //SpaceTraveler(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size);
+    SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float cooldown);
 
     // Properties
     const glm::vec3 Position() const;
@@ -35,6 +36,7 @@ public:
     const glm::vec3 Size() const;
     const float LastTimeShot() const;
     const float Cooldown() const;
+    const int Hp() const;
     bool IsAlive();
     SpaceshipModel getSpaceshipModel();
     void setSpaceshipModel(SpaceshipModel spaceshipModel);

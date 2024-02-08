@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float batteryCapacity) : SpaceTraveler(maxHp, spaceshipModelList, damage, position, direction, size)
+Player::Player(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float batteryCapacity) : SpaceTraveler(maxHp, spaceshipModelList, damage, position, direction, size, 1.5)
 {
 	this->batteryCapacity = batteryCapacity;
 	this->batteryLeft = batteryCapacity;

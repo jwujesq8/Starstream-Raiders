@@ -5,8 +5,11 @@
 #include <gtx/euler_angles.hpp>
 
 
-SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
-    maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size), isAlive(true) {}
+//SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size) :
+  //  maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size), isAlive(true) {}
+
+SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float cooldown) :
+    maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size), isAlive(true), cooldown(cooldown) {}
 
 // Private member function
 void SpaceTraveler::getShot(int damage) {
@@ -37,7 +40,13 @@ const float SpaceTraveler::Cooldown() const
     return cooldown;
 }
 
+const int SpaceTraveler::Hp() const
+{
+    return hp;
+}
+
 SpaceshipModel SpaceTraveler::getSpaceshipModel() {
+    std::cout<< "SpaceshipModel: " << spaceshipModel.mainModelPath << std::endl;
     return spaceshipModel;
 }
 void SpaceTraveler::setSpaceshipModel(SpaceshipModel spaceshipModel) {
