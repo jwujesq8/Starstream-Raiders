@@ -1,7 +1,7 @@
 Opis projektu "Starstream Raiders: Interaktywny Symulator Lotu Kosmicznego 3D":
 
     Fabuła:
-    Gracz wciela się w pilota statku kosmicznego, którego zadaniem jest unikanie niebezpieczeństw podczas dostarczania.
+    Gracz wciela się w pilota statku kosmicznego, którego zadaniem jest unikanie niebezpieczeństw podczas dostarczania gruzu.
 
     Sceny:
 
