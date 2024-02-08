@@ -160,7 +160,7 @@ glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
 float maxBoidsSpeed = 0.005f;
 float enemyLastAdded = glfwGetTime();
-float enemyAddCooldown = 7.0f;
+float enemyAddCooldown = 30.0f;
 
 unsigned int VAOtext, VBOtext;
 glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
@@ -234,7 +234,7 @@ void addEnemy() {
 	int yub = 1;
 	glm::vec3 newPosition = glm::vec3(rand() % (xzub - xzlb + 1) + xzlb, rand() % (yub - ylb + 1) + ylb, rand() % (xzub - xzlb + 1) + xzlb);
 	glm::vec3 newDirection = glm::normalize(player.Position() - newPosition);
-	enemies.push_back(SpaceTraveler(20, ufoModelShip, 10, newPosition, glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 3.0f));
+	enemies.push_back(SpaceTraveler(20, ufoModelShip, 3, newPosition, newDirection, glm::vec3(1.0), 3.0f));
 
 }
 
@@ -496,6 +496,11 @@ void renderScene(GLFWwindow* window)
 
 	drawSkybox(glm::translate(glm::mat4(1.0), player.Position()));
 
+	if(enemyLastAdded + enemyAddCooldown < time)
+	{
+		addEnemy();
+		enemyLastAdded = time;
+	}
 
 	
 	glUseProgram(program);
@@ -534,9 +539,9 @@ void renderScene(GLFWwindow* window)
 			drawLaser(enemies[i]);
 			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
 			std::cout << "index: " << i << ", " << enemies[i].Position().x << "   " << enemies[i].Direction().x << std::endl;
-			drawObjectTexture(enemyContexts[i],
+			drawObjectTexture(enemyContexts[0],
 				glm::translate(glm::mat4(1.0), enemies[i].Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(1.0)),
-				texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]
+				texture::enemyTextures[0], texture::enemyNormals[0], texture::enemyRoughnesses[0], texture::enemyMetallics[0]
 			);
 			
 		}
@@ -644,8 +649,8 @@ void init(GLFWwindow* window)
 			"./models/ufo/textures/ufo_roughness.png"}
 	};
 	enemies = {
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 40.0f),
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 10.0f),
+		SpaceTraveler(20, ufoModelShip[0], 3, glm::vec3(-5.0f, 1.500000f, 4.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 40.0f),
+		SpaceTraveler(20, ufoModelShip[0], 3, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 10.0f),
 	};
 
 	glEnable(GL_DEPTH_TEST);

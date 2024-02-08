@@ -42,7 +42,7 @@ void Player::shoot(std::vector<SpaceTraveler>& targets)
 {
 	if (batteryLeft > 0) {
 		SpaceTraveler::shoot(targets);
-		batteryLeft -= batteryDrainSpeed * 1000;
+		batteryLeft -= batteryDrainSpeed * 100000;
 	}
 	else {
 		std::cout << "Your ship needs to be charged" << std::endl;
