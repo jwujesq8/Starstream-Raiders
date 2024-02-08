@@ -19,7 +19,7 @@ Opis projektu "Starstream Raiders: Interaktywny Symulator Lotu Kosmicznego 3D":
 
     Mapowanie Normalnych: Wykorzystane do detali na powierzchniach statków i planet.
     PBR (Physically Based Rendering): Zapewnia realizm materiałów, takich jak metal czy szkło, oraz powierzchni planetarnych.
-    Bloom: Dodaje efekt światła i blasku w przestrzeni kosmicznej.
+    BOIDS: obce statki poruszają się i atakują grupowo z użyciem algorytmu BOIDS
 
     Cel Projektu:
     Stworzenie interaktywnego symulatora lotu kosmicznego z zaawansowanymi technikami grafiki, zapewniając dynamiczne i realistyczne środowisko do eksploracji.
