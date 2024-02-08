@@ -94,7 +94,21 @@ namespace texture {
 	GLuint asteroidBaseColor_3;
 	GLuint asteroidMetallic_3;
 	GLuint asteroidNormal_3;
-	std::vector<GLuint> enemyTextures; std::vector<GLuint> enemyNormals; std::vector<GLuint> enemyRoughnesses; std::vector<GLuint> enemyMetallics;
+	
+	GLuint cargoBaseColor1;
+	GLuint cargoNormal1;
+	GLuint cargoRoughness1;
+	GLuint cargoMetallic1;
+	GLuint cargoBaseColor2;
+	GLuint cargoNormal2;
+	GLuint cargoRoughness2;
+	GLuint cargoMetallic2;
+
+	GLuint stationBaseColor;
+	GLuint stationNormal;
+	GLuint stationRoughness;
+	GLuint stationMetallic;
+	GLuint enemyTextures; GLuint enemyNormals; GLuint enemyRoughnesses; GLuint enemyMetallics;
 
 
 }
@@ -121,6 +135,8 @@ Core::RenderContext asteroidContext_3;
 Core::RenderContext bulletContext;
 
 Core::RenderContext cubeContext;
+Core::RenderContext cargoContext1;
+Core::RenderContext cargoContext2;
 
 glm::vec3 cameraPos = glm::vec3(-4.f, 0, 0);
 glm::vec3 cameraDir = glm::vec3(1.f, 0.f, 0.f);
@@ -152,7 +168,7 @@ float spotlightPhi = 3.14 / 3;
 
 SpaceshipModelList spaceshipModels;
 
-Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(10.0, 1.000000f, -7.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
+Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(10.0, 1.000000f, -7.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(0.5, 0.3, 0.5), 200);
 std::vector<SpaceTraveler> enemies = {};
 
 float scaleModelIndex = 0.1;
@@ -168,14 +184,14 @@ glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 bool isShipOnStation(SpaceTraveler ship) {
 	glm::vec3 stationPosition = glm::vec3(stationPosMatrix[3]);
 
-	float threshold = 1.5f;
+	float threshold = 7.f;
 	float shipStationdistance = glm::distance(ship.Position(), stationPosition);
 
 	return shipStationdistance < threshold;
 }
 
 bool isShipNearDestination(SpaceTraveler ship, Mission mission) {
-	float threshold = 5.0f;
+	float threshold = 7.0f;
 	glm::vec3 shipPos = ship.Position();
 	glm::vec3 planetPosBeforeRotation = mission.TranslationVector();
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0), (float)glfwGetTime() * mission.RotationSpeed(), glm::vec3(0, 1, 0));
@@ -234,7 +250,7 @@ void addEnemy() {
 	int yub = 1;
 	glm::vec3 newPosition = glm::vec3(rand() % (xzub - xzlb + 1) + xzlb, rand() % (yub - ylb + 1) + ylb, rand() % (xzub - xzlb + 1) + xzlb);
 	glm::vec3 newDirection = glm::normalize(player.Position() - newPosition);
-	enemies.push_back(SpaceTraveler(20, ufoModelShip, 3, newPosition, newDirection, glm::vec3(1.0), 3.0f));
+	enemies.push_back(SpaceTraveler(20, ufoModelShip, 5, newPosition, newDirection, glm::vec3(0.6, 0.4, 0.6), 3.0f));
 
 }
 
@@ -512,7 +528,8 @@ void renderScene(GLFWwindow* window)
 			planets[i].albedo, planets[i].normal, planets[i].roughness, planets[i].metallic);
 	}
 	//drawStar(sphereContext, glm::mat4(1.0), texture::sun);
-	drawObjectColor(station, glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.001f)) * glm::rotate(glm::mat4(1.0), 1.57f, glm::vec3(0, 0, 1)), glm::vec3(0.2), 0.3, 0.6);
+	drawObjectTexture(station, glm::translate(glm::mat4(1.0), glm::vec3(13.0f, 0.f, 19.0f)) * glm::scale(glm::mat4(1.0), glm::vec3(0.01f)) * glm::rotate(glm::mat4(1.0), 1.57f, glm::vec3(0, 0, 1)),
+		texture::stationBaseColor, texture::stationNormal, texture::stationRoughness, texture::stationMetallic);
 	drawObjectTexture(asteroidContext_2, glm::rotate(glm::mat4(1.0), time * 0.3f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0), glm::vec3(13.0, 2., 0)) *
 		glm::scale(glm::mat4(1.0), glm::vec3(0.0002f)),
 		texture::asteroidBaseColor_2, texture::asteroidNormal_2, texture::asteroidRoughness_2, texture::asteroidMetallic_2);
@@ -537,12 +554,9 @@ void renderScene(GLFWwindow* window)
 			enemyMove(enemies[i], i);
 			attackThePlayer(enemies[i]);
 			drawLaser(enemies[i]);
-			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
-			std::cout << "index: " << i << ", " << enemies[i].Position().x << "   " << enemies[i].Direction().x << std::endl;
 			drawObjectTexture(enemyContexts[0],
 				glm::translate(glm::mat4(1.0), enemies[i].Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(1.0)),
-				texture::enemyTextures[0], texture::enemyNormals[0], texture::enemyRoughnesses[0], texture::enemyMetallics[0]
-			);
+				texture::enemyTextures, texture::enemyNormals, texture::enemyRoughnesses, texture::enemyMetallics);
 			
 		}
 		drawLaser(enemies[i]);
@@ -575,14 +589,22 @@ void renderScene(GLFWwindow* window)
 		drawText(std::to_string(currentMission.TimeLeft()), glm::vec3(0.8f, 0.1f, 0.1f), 250.0f, 570.0f, 0.8f);
 		
 		drawDestinationPoint(currentMission.TranslationVector(), currentMission.RotationSpeed(), currentMission);
-		drawObjectTexture(currentMission.CargoContext(),
-			 glm::translate(glm::mat4(1.0), player.Position() + glm::vec3(0.0, 2.0, 0.0)) * spaceshipCameraRotrationMatrix * glm::scale(glm::mat4(1.0), glm::vec3(0.01)),
-			currentMission.Albedo(), currentMission.Normal(), currentMission.Roughness(), currentMission.Metallic());
+		if (currentMission.contextNumber == 1)
+		{
+			drawObjectTexture(cargoContext1, glm::translate(glm::mat4(1.0), player.Position() + glm::vec3(0.0, -0.5, 0.0)) * spaceshipCameraRotrationMatrix * glm::rotate(mat4(1.0), glm::pi<float>(), glm::vec3(0, 1, 0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.01)),
+				currentMission.Albedo(), currentMission.Normal(), currentMission.Roughness(), currentMission.Metallic());
+		}
+		if (currentMission.contextNumber == 2)
+		{
+			drawObjectTexture(cargoContext2, glm::translate(glm::mat4(1.0), player.Position() + glm::vec3(0.0, -0.5, 0.0)) * spaceshipCameraRotrationMatrix * glm::rotate(mat4(1.0), glm::pi<float>(), glm::vec3(0, 1, 0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.002)),
+				currentMission.Albedo(), currentMission.Normal(), currentMission.Roughness(), currentMission.Metallic());
+		}
+		
 	}
 	#pragma endregion
 	#pragma region text
 	drawText(std::to_string((int)round(player.BatteryLeft() / player.BatteryCapacity() * 100.f)) + "%", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 570.0f, 1.0f);
-	drawText(std::to_string(player.Hp()), glm::vec3(0.8, 0.5f, 0.2f), 125.0f, 570.0f, 1.0f);
+	drawText(std::to_string(player.Hp()), glm::vec3(0.8, 0.5f, 0.2f), 150.0f, 570.0f, 1.0f);
 
 	if (isShipOnStation(player)) {
 		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 0.5f);
@@ -649,8 +671,8 @@ void init(GLFWwindow* window)
 			"./models/ufo/textures/ufo_roughness.png"}
 	};
 	enemies = {
-		SpaceTraveler(20, ufoModelShip[0], 3, glm::vec3(-5.0f, 1.500000f, 4.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 40.0f),
-		SpaceTraveler(20, ufoModelShip[0], 3, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 10.0f),
+		SpaceTraveler(20, ufoModelShip[0], 5, glm::vec3(-5.0f, 1.500000f, 4.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(0.6, 0.4, 0.6), 40.0f),
+		SpaceTraveler(20, ufoModelShip[0], 5, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f),  glm::vec3(0.6, 0.4, 0.6), 10.0f),
 	};
 
 	glEnable(GL_DEPTH_TEST);
@@ -666,10 +688,7 @@ void init(GLFWwindow* window)
 
 	generateCharacters();
 	
-	//spaceshipModelList.fillList();
-	//TODO LENA: replace last argument with the actual size
-	//currentSpaceship = spaceshipModelList.getNextModel();
-	std::cout<<player.getSpaceshipModel().mainModelPath<<std::endl;
+	
 	std::string playerModelPath = player.getSpaceshipModel().mainModelPath;
 	loadModelToContext(player.getSpaceshipModel().mainModelPath, shipContext);
 	texture::spaceshipAlbedo = Core::LoadTexture(spaceshipModels.getCurrentSpaceshipModel().textureBaseColorPath.data());
@@ -686,16 +705,12 @@ void init(GLFWwindow* window)
 	loadModelToContext("./models/asteroids/3/asteroid_3.obj", asteroidContext_3);
 	loadModelToContext("./models/lazer_bullet.obj", bulletContext);
 	loadModelToContext("./models/sun.obj", sun);
-	for (int i = 0; i < enemies.size(); i++) {
-		Core::RenderContext enemyContext;
-		loadModelToContext(enemies[i].getSpaceshipModel().mainModelPath, enemyContext);
-		enemyContexts.push_back(enemyContext);
-
-		texture::enemyTextures.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureBaseColorPath.data()));
-		texture::enemyNormals.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureNormalPath.data()));
-		texture::enemyRoughnesses.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureRoughnessPath.data()));
-		texture::enemyMetallics.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureMetallicPath.data()));
-	}
+	loadModelToContext("./models/containers/container1.obj", cargoContext1);
+	loadModelToContext("./models/containers/container2.obj", cargoContext2);
+	texture::enemyTextures = Core::LoadTexture(enemies[0].getSpaceshipModel().textureBaseColorPath.data());
+	texture::enemyNormals = Core::LoadTexture(enemies[0].getSpaceshipModel().textureNormalPath.data());
+	texture::enemyRoughnesses = Core::LoadTexture(enemies[0].getSpaceshipModel().textureRoughnessPath.data());
+	texture::enemyMetallics = Core::LoadTexture(enemies[0].getSpaceshipModel().textureMetallicPath.data());
 	std::vector<std::string> skyboxPaths = {
 			"textures/skybox-right.png",
 			"textures/skybox-left.png",
@@ -748,6 +763,12 @@ void init(GLFWwindow* window)
 	texture::asteroidMetallic_3 = Core::LoadTexture("./models/asteroids/3/textures/Metalness.png");
 	texture::asteroidNormal_3 = Core::LoadTexture("./models/asteroids/3/textures/Normal.png");
 
+	texture::stationBaseColor = Core::LoadTexture("./textures/station/Ring_Material.002_Base_Color.png");
+	texture::stationNormal = Core::LoadTexture("./textures/station/Ring_Material.002_Normal_OpenGL.png");
+	texture::stationRoughness = Core::LoadTexture("./textures/station/Ring_Material.002_Roughness.png");
+	texture::stationMetallic = Core::LoadTexture("./textures/station/Ring_Material.002_Metallic.png");
+
+
 	planets = {
 		Planet(glm::vec3(16.0f, 0.f, 10.0f), 2.5f, 0.02f, texture::planetContinentBase, texture::planetContinentNormal, texture::planetContinentRoughness, texture::planetContinentMetallic),
 		Planet(glm::vec3(-7.0f, 0.f, 6.0f), 3.f, 0.035f, texture::planetBarrenBase, texture::planetBarrenNormal, texture::planetBarrenRoughness, texture::empty),
@@ -760,9 +781,9 @@ void init(GLFWwindow* window)
 	#pragma endregion
 
 	missions = {
-	Mission(30.f, planets[2], "textures/containers/cargocrate1_BaseColor.png", "textures/containers/cargocrate1_Normal.png", "textures/containers/cargocrate1_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
-	Mission(30.f, planets[3], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
-	Mission(30.f, planets[5], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png"),
+		Mission(30.f, planets[2], "textures/containers/cargocrate1_BaseColor.png", "textures/containers/cargocrate1_Normal.png", "textures/containers/cargocrate1_Roughness.png", "textures/containers/cargocrate2_Metallic.png", 1),
+		Mission(30.f, planets[3], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png", 2),
+		Mission(30.f, planets[5], "textures/containers/cargocrate2_BaseColor.png", "textures/containers/cargocrate2_Normal.png", "textures/containers/cargocrate2_Roughness.png", "textures/containers/cargocrate2_Metallic.png", 2),
 	};
 
 	currentMission = missions[0];

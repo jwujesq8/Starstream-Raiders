@@ -18,7 +18,7 @@ Mission::Mission(float duration, glm::vec3 destination, float rotationSpeed, std
 	missionFailTime = 0.0f;
 	missionSuccessTime = 0.0f;
 }
-Mission::Mission(float duration, Planet planet, std::string albedoPath, std::string normalPath, std::string roughnessPath, std::string metallicPath) : duration(duration)
+Mission::Mission(float duration, Planet planet, std::string albedoPath, std::string normalPath, std::string roughnessPath, std::string metallicPath, int contextNumber) : duration(duration), contextNumber(contextNumber)
 {
 	destination = planet.translation;
 	rotationSpeed = planet.rotationSpeed;
@@ -45,11 +45,6 @@ float Mission::TimeLeft()
 		missionFailTime = glfwGetTime();
 	}
 	return round(timeLeft);
-}
-
-Core::RenderContext Mission::CargoContext()
-{
-	return cargoContext;
 }
 
 bool Mission::IsActive()

@@ -2,7 +2,7 @@
 
 class Player : public SpaceTraveler {
 private:
-	float batteryDrainSpeed = 0.005;
+	float batteryDrainSpeed = 0.007;
 	float batteryCapacity;
 	float batteryLeft;
 
