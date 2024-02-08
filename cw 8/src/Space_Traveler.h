@@ -20,7 +20,8 @@ private:
     bool isAlive;
     float speed;
     float angleSpeed = 0.005f;
-    float moveSpeed = 0.01;
+    //float moveSpeed = 0.01;
+    float moveSpeed = 0.1;
     float lastTimeShot = 0.0f;
     float cooldown = 1.5f;
 
@@ -47,6 +48,7 @@ public:
     void turnRight();
     void turnUp();
     void turnDown();
+    void move(glm::vec3 pos, glm::vec3 dir);
 };
 
 #endif // SPACE_TRAVELER_H

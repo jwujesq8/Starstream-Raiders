@@ -153,7 +153,7 @@ float spotlightPhi = 3.14 / 3;
 SpaceshipModelList spaceshipModels;
 
 Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(10.0, 1.000000f, -7.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
-std::vector<SpaceTraveler> enemies;
+std::vector<SpaceTraveler> enemies = {};
 
 float scaleModelIndex = 0.1;
 glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
@@ -401,6 +401,78 @@ void drawDestinationPoint(glm::vec3 translation, float rotationSpeed, Mission mi
 }
 
 
+glm::vec3 rule1(SpaceTraveler enemy, int index) {
+	glm::vec3 center = glm::vec3(0,0,0);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		SpaceTraveler b = enemies[i];
+		if (b.IsAlive() && i!=index) {
+			center = center + b.Position();
+		}
+	}
+	center = center / static_cast<float>(enemies.size() - 1);
+	center = (center - enemy.Position()) / static_cast<float>(50);
+	return center;
+}
+
+glm::vec3 rule2(SpaceTraveler enemy, int index) {
+	glm::vec3 distance = glm::vec3(0, 0, 0);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		SpaceTraveler b = enemies[i];
+
+		if (b.IsAlive() && i != index) {
+
+			if (glm::distance(b.Position(), enemy.Position()) < 2.0f) {
+				distance = distance - (b.Position() - enemy.Position());
+			}
+		}
+	}
+	return distance;
+}
+
+glm::vec3 rule3(SpaceTraveler enemy, int index) {
+	glm::vec3 pv = glm::vec3(0, 0, 0);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		SpaceTraveler b = enemies[i];
+		if (b.IsAlive() && i != index) {
+			pv = pv + b.Direction();
+		}
+	}
+	pv = pv / static_cast<float>(enemies.size() - 1);
+	glm::vec3 enemy_pv = (pv - enemy.Direction()) / static_cast<float>(8);
+	return enemy_pv;
+}
+
+glm::vec3 tendToTargetPos(SpaceTraveler enemy) {
+	if (enemy.IsAlive()) {
+		glm::vec3 pos = (player.Position() - enemy.Position()) / static_cast<float>(2);
+		return pos;
+	}
+}
+
+glm::vec3 tendToTargetDir(SpaceTraveler enemy) {
+	if (enemy.IsAlive()) {
+		glm::vec3 dir = (player.Direction() - enemy.Direction()) / static_cast<float>(2);
+		return dir;
+	}
+}
+
+void attackThePlayer(SpaceTraveler enemy) {}
+
+void enemyMove(SpaceTraveler& enemy, int enemies_index) {
+	glm::vec3 v1 = rule1(enemy, enemies_index);
+	glm::vec3 v2 = rule2(enemy, enemies_index);
+	glm::vec3 v3 = rule3(enemy, enemies_index);
+
+	glm::vec3 pos = enemy.Position() + v1 + v2 + tendToTargetPos(player);
+	glm::vec3 dir = enemy.Direction() + v3 + tendToTargetDir(player);
+	enemy.move(pos, dir);
+	//std::cout << "index: " << enemies_index << ", " << enemy.Position().x << "   " << enemy.Direction().x << std::endl;
+}
+
+
 void renderScene(GLFWwindow* window)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -445,6 +517,9 @@ void renderScene(GLFWwindow* window)
 		//enemy.move();
 		SpaceTraveler enemy = enemies[i];
 		if (enemy.IsAlive()) {
+			enemyMove(enemy, i);
+			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
+			std::cout << "index: " << i << ", " << enemy.Position().x << "   " << enemy.Direction().x << std::endl;
 			drawObjectTexture(enemyContexts[i],
 				glm::translate(glm::mat4(1.0), enemy.Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.033)),
 				texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]

@@ -94,3 +94,8 @@ void SpaceTraveler::turnDown() {
     glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), -angleSpeed, right);
     direction = glm::vec3(rotation * glm::vec4(direction, 0));
 }
+
+void SpaceTraveler::move(glm::vec3 pos, glm::vec3 dir) {
+    this->position = pos;
+    this->direction = dir;
+}
