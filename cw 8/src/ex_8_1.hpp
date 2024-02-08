@@ -457,11 +457,10 @@ glm::vec3 tendToTarget(const SpaceTraveler& enemy, const glm::vec3& targetPositi
 }
 
 void attackThePlayer(SpaceTraveler& enemy) {
-	std::vector<SpaceTraveler> targets;
-	targets.push_back(player);
-	if (3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f && enemy.LastTimeShot() + enemy.Cooldown() < glfwGetTime()) {
+	float time1 = glfwGetTime();
+	if ((3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f) && (enemy.LastTimeShot() + enemy.Cooldown() < time1)) {
 		if (enemy.IsAlive()) {
-			ShotTimer t1{ (size_t)(shotDuration / 2.0f), enemy, targets};
+			enemy.shootPlayer(player);
 		}
 	}
 }
@@ -640,8 +639,8 @@ void init(GLFWwindow* window)
 			"./models/ufo/textures/ufo_roughness.png"}
 	};
 	enemies = {
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 4.0f),
-		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 3.0f),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 40.0f),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 10.0f),
 	};
 
 	glEnable(GL_DEPTH_TEST);

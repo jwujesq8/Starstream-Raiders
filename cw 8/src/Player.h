@@ -17,4 +17,5 @@ public:
 	void shoot(std::vector<SpaceTraveler>& targets);
 	void charge();
 	
+	
 };

@@ -24,12 +24,12 @@ private:
     float lastTimeShot = 0.0f;
     float cooldown = 1.5f;
 
-    void getShot(int damage);
+    
 
 public:
     //SpaceTraveler(int maxHp, SpaceshipModel spaceshipModelList, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size);
     SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damage, glm::vec3 position, glm::vec3 direction, glm::vec3 size, float cooldown);
-
+    void getShot(int damage);
     // Properties
     const glm::vec3 Position() const;
     const glm::vec3 Direction() const;
@@ -43,6 +43,7 @@ public:
     
     // Functions
     void shoot(std::vector<SpaceTraveler>& targets);
+    void shootPlayer(SpaceTraveler& target);
     void forward(bool doubleSpeed);
     void backward(bool doubleSpeed);
     void turnLeft();

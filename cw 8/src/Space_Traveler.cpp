@@ -12,11 +12,17 @@ SpaceTraveler::SpaceTraveler(int maxHp, SpaceshipModel spaceshipModel, int damag
     maxHp(maxHp), spaceshipModel(spaceshipModel), hp(maxHp), damage(damage), position(position), direction(direction), size(size), isAlive(true), cooldown(cooldown) {}
 
 // Private member function
+//void SpaceTraveler::getShot(int damage) {
+  //  hp -= damage;
+    //if (hp <= 0)
+      //  isAlive = false;
+//}
+
 void SpaceTraveler::getShot(int damage) {
-    hp -= damage;
-    if (hp <= 0)
+    this->hp -= damage;
+    if (this->hp <= 0)
         isAlive = false;
-}
+ }
 
 // Properties
 const glm::vec3 SpaceTraveler::Position() const {
@@ -69,6 +75,18 @@ void SpaceTraveler::shoot(std::vector<SpaceTraveler>& targets) {
         if (Calculations::rayCubeCollision(direction, position, targetsMin, targetsMax))
             targets[i].getShot(damage);
     }
+}
+
+void SpaceTraveler::shootPlayer(SpaceTraveler& target)
+{
+    glm::vec3 targetsMin;
+    glm::vec3 targetsMax;
+
+    lastTimeShot = glfwGetTime();
+
+    Calculations::calculatePlayerBoundingBox(target.Position(), target.Size(), target.Direction(), targetsMin, targetsMax);
+    if (Calculations::rayCubeCollision(direction, position, targetsMin, targetsMax))
+        target.getShot(damage);
 }
 
 
