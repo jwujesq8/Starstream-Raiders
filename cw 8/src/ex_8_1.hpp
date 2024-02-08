@@ -580,13 +580,18 @@ void renderScene(GLFWwindow* window)
 	drawText(std::to_string(player.Hp()), glm::vec3(0.8, 0.5f, 0.2f), 125.0f, 570.0f, 1.0f);
 
 	if (isShipOnStation(player)) {
-		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 1.0f);
+		drawText("Press E to recharge", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 520.0f, 0.5f);
 	}
 	if (isShipOnStation(player) && !currentMission.IsActive()) {
-		drawText("Press F to start mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 450.0f, 1.0f);
+		drawText("Press F to start mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 470.0f, 0.5f);
 	}
 	if (currentMission.IsActive() && isShipNearDestination(player, currentMission)) {
-		drawText("Press F to end mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 500.0f, 1.0f);
+		drawText("Press F to end mission", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 470.0f, 0.5f);
+	}
+	if (isShipOnStation(player))
+	{
+		drawText("Press M to change your spaceship", glm::vec3(0.5, 0.8f, 0.2f), 25.0f, 420.0f, 0.5f);
+
 	}
 	if(time - currentMission.MissionFailTime() < 3.f)
 	{
@@ -687,12 +692,12 @@ void init(GLFWwindow* window)
 		texture::enemyMetallics.push_back(Core::LoadTexture(enemies[i].getSpaceshipModel().textureMetallicPath.data()));
 	}
 	std::vector<std::string> skyboxPaths = {
-			"textures/skybox-right.jpg",
-			"textures/skybox-left.jpg",
-			"textures/skybox-top.jpg",
-			"textures/skybox-bottom.jpg",
-			"textures/skybox-back.jpg",
-			"textures/skybox-front.jpg"
+			"textures/skybox-right.png",
+			"textures/skybox-left.png",
+			"textures/skybox-top.png",
+			"textures/skybox-bottom.png",
+			"textures/skybox-back.png",
+			"textures/skybox-front.png"
 	};
 	texture::skybox = Core::LoadSkybox(skyboxPaths);
 
@@ -795,17 +800,17 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		player.forward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);//spaceshipPos += player.Direction() * moveSpeed;
+		player.forward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		player.backward(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS); //spaceshipPos -= player.Direction() * moveSpeed;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		player.turnLeft();//player.Direction() = glm::vec3(glm::eulerAngleY(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnLeft();
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		player.turnRight();//player.Direction() = glm::vec3(glm::eulerAngleY(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnRight();
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		player.turnUp();//player.Direction() = glm::vec3(glm::eulerAngleX(angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnUp();
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		player.turnDown();//player.Direction() = glm::vec3(glm::eulerAngleX(-angleSpeed) * glm::vec4(player.Direction(), 0));
+		player.turnDown();
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && isShipOnStation(player))
 		player.charge();
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && isShipOnStation(player) && !currentMission.IsActive()) {
@@ -828,7 +833,6 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 		exposition += 0.05;
 
-	//change the spaceships model (it's available only on the station)
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && isShipOnStation(player)) {
 		
 		spaceshipModels.setNextModel();
@@ -879,4 +883,3 @@ void renderLoop(GLFWwindow* window) {
 		glfwPollEvents();
 	}
 }
-//}
