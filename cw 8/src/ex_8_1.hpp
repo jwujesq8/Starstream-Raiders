@@ -437,6 +437,14 @@ glm::vec3 tendToTarget(const SpaceTraveler& enemy, const glm::vec3& targetPositi
 	return steer;
 }
 
+//void attackThePlayer(SpaceTraveler& enemy) {
+//	if (3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f) {
+//		if (enemy.IsAlive()) {
+//			enemy.shoot(player);
+//		}
+//	}
+//}
+
 void enemyMove(SpaceTraveler& enemy, int enemies_index) {
 	glm::vec3 v1 = rule1(enemy, enemies_index);
 	glm::vec3 v2 = rule2(enemy, enemies_index);
