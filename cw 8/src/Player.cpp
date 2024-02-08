@@ -20,7 +20,10 @@ void Player::forward(bool doubleSpeed)
 {
 	if (batteryLeft > 0) {
 		SpaceTraveler::forward(doubleSpeed);
-		batteryLeft -= batteryDrainSpeed;
+		if (doubleSpeed)
+			batteryLeft -= batteryDrainSpeed * 2.5;
+		else
+			batteryLeft -= batteryDrainSpeed;
 	}
 	else {
 		std::cout << "Your ship needs to be charged" << std::endl;
@@ -42,7 +45,7 @@ void Player::shoot(std::vector<SpaceTraveler>& targets)
 {
 	if (batteryLeft > 0) {
 		SpaceTraveler::shoot(targets);
-		batteryLeft -= batteryDrainSpeed * 100000;
+		batteryLeft -= batteryDrainSpeed * 400000;
 	}
 	else {
 		std::cout << "Your ship needs to be charged" << std::endl;

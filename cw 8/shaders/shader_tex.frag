@@ -96,7 +96,7 @@ void main()
 	bColor = texture2D(baseColor, fragTexCoord).rgb;
 	//vec3 albedoTex = texture2D(textureAlbedo, fragTexCoord).rgb;
 	vec3 normalTex= texture2D(normalMap, fragTexCoord).rgb; // = vec3(0,0,1)
-	vec3 metallic = texture2D(metalMap, fragTexCoord).rgb + additionalMetallic;
+	float metallic = texture2D(metalMap, fragTexCoord).r + additionalMetallic;
 	float roughness = texture2D(rougMap, fragTexCoord).r + additionalRoughness;
 
 	//vec3 aoTex = texture2D(textureAO, fragTexCoord).rgb;
