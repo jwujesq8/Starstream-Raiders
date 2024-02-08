@@ -47,6 +47,7 @@ public:
     void turnRight();
     void turnUp();
     void turnDown();
+    void move(glm::vec3 pos, glm::vec3 dir);
 };
 
 #endif // SPACE_TRAVELER_H

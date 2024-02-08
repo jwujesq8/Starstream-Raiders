@@ -153,11 +153,12 @@ float spotlightPhi = 3.14 / 3;
 SpaceshipModelList spaceshipModels;
 
 Player player(100, spaceshipModels.getCurrentSpaceshipModel(), 10, glm::vec3(10.0, 1.000000f, -7.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0), 200);
-std::vector<SpaceTraveler> enemies;
+std::vector<SpaceTraveler> enemies = {};
 
 float scaleModelIndex = 0.1;
 glm::vec3 translateModelVec = glm::vec3(0, 0, 0);
 float shotDuration = 1.0f;
+float maxBoidsSpeed = 0.005f;
 
 unsigned int VAOtext, VBOtext;
 glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
@@ -401,6 +402,70 @@ void drawDestinationPoint(glm::vec3 translation, float rotationSpeed, Mission mi
 }
 
 
+glm::vec3 rule1(const SpaceTraveler& enemy, int index) {
+	glm::vec3 distance = glm::vec3(0, 0, 0);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		if (enemies[i].IsAlive() && i != index) {
+			if (glm::distance(enemies[i].Position(), enemy.Position()) < 3.0f) {
+				distance = distance - (enemies[i].Position() - enemy.Position());
+			}
+		}
+	}
+	return distance;
+}
+
+glm::vec3 rule2(const SpaceTraveler& enemy, int index) {
+	glm::vec3 pv = glm::vec3(0, 0, 0);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		if (enemies[i].IsAlive() && i != index) {
+			pv = pv + enemies[i].Direction();
+		}
+	}
+	if (enemies.size() > 1) {
+		pv /= static_cast<float>(enemies.size() - 1);
+		glm::vec3 enemy_pv = (pv - enemy.Direction()) / static_cast<float>(8);
+		return enemy_pv;
+	}
+	return glm::vec3(0, 0, 0);
+}
+
+glm::vec3 tendToTarget(const SpaceTraveler& enemy, const glm::vec3& targetPosition) {
+	glm::vec3 desired = targetPosition - enemy.Position();
+	glm::vec3 steer = desired - enemy.Direction();
+	return steer;
+}
+
+//void attackThePlayer(SpaceTraveler& enemy) {
+//	if (3.0f < glm::distance(enemy.Position(), player.Position()) < 7.0f) {
+//		if (enemy.IsAlive()) {
+//			enemy.shoot(player);
+//		}
+//	}
+//}
+
+void enemyMove(SpaceTraveler& enemy, int enemies_index) {
+	glm::vec3 v1 = rule1(enemy, enemies_index);
+	glm::vec3 v2 = rule2(enemy, enemies_index);
+	glm::vec3 v3 = tendToTarget(enemy, player.Position());
+
+	glm::vec3 acceleration = v1 + v2 + v3;
+	if (glm::length(acceleration) > maxBoidsSpeed) {
+        acceleration = glm::normalize(acceleration) * maxBoidsSpeed;
+    }
+
+	// Update direction and position
+	glm::vec3 dir = enemy.Direction() + acceleration;
+	glm::vec3 pos = enemy.Position() + enemy.Direction() * maxBoidsSpeed;
+	enemy.move(pos, dir);
+
+	// Call move function if necessary
+	// enemy.move(enemy.Position(), enemy.Direction());
+}
+
+
+
 void renderScene(GLFWwindow* window)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -443,15 +508,17 @@ void renderScene(GLFWwindow* window)
 	#pragma region enemies
 	for (int i = 0; i < enemies.size(); i++) {
 		//enemy.move();
-		SpaceTraveler enemy = enemies[i];
-		if (enemy.IsAlive()) {
+		if (enemies[i].IsAlive()) {
+			enemyMove(enemies[i], i);
+			//enemy.move(glm::vec3(4.5, 0.0, 4.7), glm::vec3(0.0));
+			std::cout << "index: " << i << ", " << enemies[i].Position().x << "   " << enemies[i].Direction().x << std::endl;
 			drawObjectTexture(enemyContexts[i],
-				glm::translate(glm::mat4(1.0), enemy.Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(0.033)),
+				glm::translate(glm::mat4(1.0), enemies[i].Position()) * glm::eulerAngleY(glm::pi<float>()) * glm::scale(glm::mat4(1.0), glm::vec3(1.0)),
 				texture::enemyTextures[i], texture::enemyNormals[i], texture::enemyRoughnesses[i], texture::enemyMetallics[i]
 			);
 			
 		}
-		drawLaser(enemy);
+		drawLaser(enemies[i]);
 	}
 	#pragma endregion
 	#pragma region spaceship
@@ -549,9 +616,16 @@ void loadModelToContext(std::string path, Core::RenderContext& context)
 void init(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	std::vector<SpaceshipModel> ufoModelShip = {
+		SpaceshipModel{"./models/ufo/UFO.obj",
+			"./models/ufo/textures/ufo_base.png",
+			"./models/ufo/textures/ufo_normal.png",
+			"./models/ufo/textures/ufo_metal.png",
+			"./models/ufo/textures/ufo_roughness.png"}
+	};
 	enemies = {
-		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[1], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
-		SpaceTraveler(20, spaceshipModels.getSpaceshipModelList()[2], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(-5.0f, 1.500000f, 2.124680f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
+		SpaceTraveler(20, ufoModelShip[0], 10, glm::vec3(9.0f, 0.0f, -4.0f), glm::vec3(-0.354510f, 0.000000f, 0.935054f), glm::vec3(1.0)),
 	};
 
 	glEnable(GL_DEPTH_TEST);
